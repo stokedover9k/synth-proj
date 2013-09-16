@@ -15,13 +15,14 @@ class OscillatorSpec extends Specification {
   "Oscillator" should {
 
     trait Fixture extends Scope {
-      val sr = 8   // sample Rate
+      val sr = 8   // buffer Rate
       val f = 2    // frequency
-      val samples = new Array[Double](sr)
-      var o: Oscillator = new SoundWaveOscillator(sr)
+      val samples = new Array[Float](sr)
+//      var o: Oscillator = new WaveOscillator(sr)
+      var o: Oscillator = BufferedWaveOscillator(512, Sine, sr, 0)
 
       def checkSamples( expected: Seq[Double] ) {
-        samples zip expected foreach { case (x, y) => x should be ~(y +/- 0.001d) }
+        samples zip expected foreach { case (x, y) => x.toDouble should be ~(y +/- 0.001) }
       }
     }
 
@@ -44,7 +45,7 @@ class OscillatorSpec extends Specification {
     }
 
     "samples of different size lead to equivalent values" in new Fixture {
-      val other = new Array[Double](samples.size * 2)
+      val other = new Array[Float](samples.size * 2)
       o.getSamples(f, samples)
       o.getSamples(f, other)
       samples zip other foreach { case (x, y) => x must_== y }
