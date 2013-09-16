@@ -11,6 +11,7 @@ resolvers ++= Seq(
 
 libraryDependencies ++= Seq(
 		    "org.specs2" %% "specs2" % "2.2" % "test"
+		    , "net.sf.opencsv" % "opencsv" % "2.3"
 )
 
 fork in run := true
