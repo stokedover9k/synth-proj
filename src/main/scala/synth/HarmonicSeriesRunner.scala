@@ -26,20 +26,27 @@ object HarmonicSeriesRunner {
     val series = HarmonicSeries(fundamental)
     def asFraction(x: (Int, Int)): String = x match { case (x, y) => x + "/" + y }
 
+    print(
+      "-----+-------+---------+-----+-----+-------+-------+---------+-----------\n" +
+      " deg-| ratio |  freq-  | oct-| fac-| adju- |  red- | reduced | frequency \n" +
+      " ree |       |  uency  | ave | tor | sted  |  uced | decimal | in octave \n" +
+      "-----+-------+---------+-----+-----+-------+-------+---------+-----------\n" )
+
     1 to 32 map { x => series(x) } foreach( note => {
-      val sb: StringBuilder = new StringBuilder
 
-      sb.append(note.degree)
-      sb.append(" \t " + asFraction(note.ratioToFundamental))
-      sb.append(" \t " + note.simpleFrequency)
-      sb.append(" \t " + note.octave)
-      sb.append(" \t " + note.octaveAdjustmentFactor)
-      sb.append(" \t " + asFraction(note.ratioToFundamentalAdjusted))
-      sb.append(" \t " + asFraction(note.ratioToFundamentalAdjustedReduced))
-      sb.append(" \t " + note.ratioToFundamentalAdjustedReducedDecimal)
-      sb.append(" \t " + note.frequency)
+      val str = "%4d %7s %9.2f %5d %5d %7s %7s %9.4f %9.2f".format(
+      note.degree
+      , asFraction(note.ratioToFundamental)
+      , note.simpleFrequency
+      , note.octave
+      , note.octaveAdjustmentFactor
+      , asFraction(note.ratioToFundamentalAdjusted)
+      , asFraction(note.ratioToFundamentalAdjustedReduced)
+      , note.ratioToFundamentalAdjustedReducedDecimal
+      , note.frequency
+      )
 
-      println(sb.toString)
+      println(str)
       })
   }
 }
