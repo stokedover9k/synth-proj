@@ -36,14 +36,14 @@ object HarmonicSeriesRunner {
 
       val str = "%4d %7s %9.2f %5d %5d %7s %7s %9.4f %9.2f".format(
       note.degree
-      , asFraction(note.ratioToFundamental)
-      , note.simpleFrequency
+      , note.hzSimpleRatio
+      , note.hzSimple
       , note.octave
-      , note.octaveAdjustmentFactor
-      , asFraction(note.ratioToFundamentalAdjusted)
-      , asFraction(note.ratioToFundamentalAdjustedReduced)
-      , note.ratioToFundamentalAdjustedReducedDecimal
-      , note.frequency
+      , note.adjustFactor
+      , note.hzAdjustedRatio
+      , note.hzReducedRatio
+      , note.hzDecimalRatio
+      , note.hz
       )
 
       println(str)

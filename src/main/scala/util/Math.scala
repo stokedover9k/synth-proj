@@ -8,6 +8,9 @@ package util
  * To change this template use File | Settings | File Templates.
  */
 object Log2 {
+  def apply(x: Float): Int = apply(x.toInt)
+  def apply(x: Double): Int = apply(x.toInt)
+
   def apply(x: Int): Int = {
     var bits = x
     var log = 0
@@ -19,6 +22,6 @@ object Log2 {
   }
 }
 
-object gdc {
+object gcd {
   def apply(a: Int, b: Int): Int = if (b == 0) a else apply(b, a % b)
 }

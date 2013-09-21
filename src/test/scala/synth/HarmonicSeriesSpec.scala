@@ -37,6 +37,10 @@ class HarmonicSeriesSpec extends Specification {
         compareCols(col map { _.toString }, dt)
       }
 
+      def checkQuotedColumn[T]( col: Seq[T], colNum: Int ): Unit = {
+        checkColumn( col map { x => "\"%s\"".format(x.toString) }, colNum )
+      }
+
       def checkFloatColumn( col: Seq[Float], colNum: Int ): Unit = {
         val dt = data.drop(lineStart-1).map { row => row(colNum -1).toFloat }
         compareCols( col, dt )
@@ -54,12 +58,12 @@ class HarmonicSeriesSpec extends Specification {
     }
 
     "compute correct frequency ratios to fundamental (col 3)" in new Fixture {
-      val ratioToFundamental = allNotes map { _.ratioToFundamental } map asFraction
-      checkColumn(ratioToFundamental, 3)
+      val ratioToFundamental = allNotes map { _.hzSimpleRatio }
+      checkQuotedColumn(ratioToFundamental, 3)
     }
 
     "compute correct frequencies (col 4)" in new Fixture {
-      val frequencies = allNotes map { _.simpleFrequency } map { f => if(f == f.toInt) f.toInt.toString else f.toString }
+      val frequencies = allNotes map { _.hzSimple } map { f => if(f == f.toInt) f.toInt.toString else f.toString }
       checkColumn(frequencies, 4)
     }
 
@@ -69,27 +73,27 @@ class HarmonicSeriesSpec extends Specification {
     }
 
     "compute correct octave adjustment factors (col 6)" in new Fixture {
-      val adj = allNotes map { _.octaveAdjustmentFactor }
+      val adj = allNotes map { _.adjustFactor }
       checkColumn(adj, 6)
     }
 
     "compute correct adjusted frequency ratios to fundamental (col 7)" in new Fixture {
-      val adjFactors = allNotes map { _.ratioToFundamentalAdjusted } map asFraction
-      checkColumn(adjFactors, 7)
+      val adjFactors = allNotes map { _.hzAdjustedRatio }
+      checkQuotedColumn(adjFactors, 7)
     }
 
     "compute correct adjusted and reduced frequency ratios to the fundamental (col 8)" in new Fixture {
-      val adjReduced = allNotes map { _.ratioToFundamentalAdjustedReduced } map asFraction
-      checkColumn(adjReduced, 8)
+      val adjReduced = allNotes map { _.hzReducedRatio }
+      checkQuotedColumn(adjReduced, 8)
     }
 
     "compute correct adjusted and reduced frequency ratios to the fundamental in decimal format (col 9)" in new Fixture {
-      val adjReduced = allNotes map { _.ratioToFundamentalAdjustedReducedDecimal }
+      val adjReduced = allNotes map { _.hzDecimalRatio }
       checkFloatColumn(adjReduced, 9)
     }
 
     "compute correct frequencies within the octave (col 10)" in new Fixture {
-      val frequencies = allNotes map { _.frequency } map { f => Math.round(f * 100) / 100f }
+      val frequencies = allNotes map { _.hz } map { f => Math.round(f * 100) / 100f }
       checkFloatColumn(frequencies, 10)
     }
   }
