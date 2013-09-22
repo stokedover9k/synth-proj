@@ -30,10 +30,12 @@ abstract class LivingSpec extends Specification {
     dt
   }
 
-  def seqsMustEqual[T](col1: Seq[T], col2: Seq[T]): Unit =
+  def seqsMustEqual[T](col1: Seq[T], col2: Seq[T]): Unit = {
+    col1.size must_== col2.size
     col1 zip col2 foreach {
       case (a, b) => a must_== b
     }
+  }
 
   def getDataCol(colIndex: Int): Seq[String] = {
     livingSpecData.drop(dataStartRow) map {
