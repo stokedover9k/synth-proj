@@ -1,14 +1,14 @@
 package synth
 
-import util.{Log2, Fraction}
+import util.expr.{Fraction, WholeNum, Expr}
 
 /**
- * Created with IntelliJ IDEA.
- * User: yuriy
- * Date: 9/21/13
- * Time: 12:09 AM
- * To change this template use File | Settings | File Templates.
- */
+* Created with IntelliJ IDEA.
+* User: yuriy
+* Date: 9/21/13
+* Time: 12:09 AM
+* To change this template use File | Settings | File Templates.
+*/
 
 abstract class NoteSeries {
 
@@ -23,60 +23,50 @@ abstract class NoteSeries {
   def apply(degree: Int): NoteSeries.Interval
 }
 
-
-
 object NoteSeries {
 
   abstract class Interval {
 
     /*
-     * Interval's degree within the series.
+     * The degree of the interval in the series.
      */
     def degree: Int
 
     /*
-     * Fundamental frequency of the interval's series.
+     * The fundamental frequency of the series.
      */
     def fundamental: Float
 
     /*
-     * Frequency of the Interval within an octave of the fundamental.
+     * The expression multiplied by the fundamental to get the interval's frequency.
+     * This frequency is not expected to be within the fundamental frequency's octave.
      */
-    def hz: Float = fundamental * hzDecimalRatio
+    def generatingExpression: Expr
 
     /*
-     * Basic (not octave-adjusted) ratio to the fundamental's frequency.
+     * Frequency of the interval created by the generating expression.
      */
-    def hzSimpleRatio: Fraction
+    def hzUnscaled: Float = generatingExpression.toFloat * fundamental
 
     /*
-     * Basic (before octave-adjustment) frequency of the interval
+     * The octave of the unscaled frequency (0 indexed).
      */
-    def hzSimple: Float = hzSimpleRatio.toFloat * fundamental
+    def octave: Int = (Math.log(hzUnscaled / fundamental) / Math.log(2)).floor.toInt
 
     /*
-     * Octave (in respect to the fundamental) into which the interval falls before adjustment
+     * The factor by which the unscaled frequency is divided to adjust it into
+     * the fundamental's octave.
      */
-    def octave: Int = Log2(Math.floor(hzSimpleRatio.toFloat)) + 1
+    def octaveAdjustment: Expr = Fraction(2, 1).pow(WholeNum(octave))
 
     /*
-     * Dividing the basic frequency (hzSimple) by this factor puts it within the fundamental's octave.
+     * The ratio of the fundamental to the frequency.
      */
-    def adjustFactor: Int = 1 << Log2(Math.floor(hzSimpleRatio.toFloat))
+    def hzFactor: Expr = generatingExpression.div(octaveAdjustment)
 
     /*
-     * Ratio to the fundamental with adjustment into its octave.
+     * Frequency of the interval within the fundamental's frequency.
      */
-    def hzAdjustedRatio: Fraction = hzSimpleRatio / adjustFactor
-
-    /*
-     * Ratio to the fundamental with adjustment into its octave reduced to a proper factor form.
-     */
-    def hzReducedRatio: Fraction = hzAdjustedRatio.reduce
-
-    /*
-     * Ratio to the fundamental with adjustment into its octave in a decimal format.
-     */
-    def hzDecimalRatio: Float = hzAdjustedRatio.toFloat
+    def hz: Float = hzFactor.toFloat * fundamental
   }
 }

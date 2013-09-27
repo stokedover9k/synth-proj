@@ -2,6 +2,7 @@ package util2
 
 import org.specs2.mutable._
 import org.specs2.specification.Scope
+import util.expr._
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,22 +28,22 @@ class ExpressionsSpec extends Specification {
 
       def checkSigns(n: Int, d: Int): Unit = {
         val f: Fraction = Fraction(n, d)
-        if( n * d < 0 ) f.num.toFloat must beLessThan(0f)
-        else            f.num.toFloat must beGreaterThanOrEqualTo(0f)
-        f.denom.toFloat must beGreaterThan(0f)
+        if( n * d < 0 ) f.leftOp.toFloat must beLessThan(0f)
+        else            f.leftOp.toFloat must beGreaterThanOrEqualTo(0f)
+        f.rightOp.toFloat must beGreaterThan(0f)
       }
 
     }
     "construct" in {
-      val frac: Fraction = new Fraction(Num(1), Num(2))
-      frac.num.toFloat must_== 1f
-      frac.denom.toFloat must_== 2f
+      val frac: Fraction = Fraction(Num(1), Num(2))
+      frac.leftOp.toFloat must_== 1f
+      frac.rightOp.toFloat must_== 2f
     }
 
     "reduce at construction" in {
       val frac: Fraction = Fraction(4, 8)
-      frac.num.toFloat must_== 1f
-      frac.denom.toFloat must_== 2f
+      frac.leftOp.toFloat must_== 1f
+      frac.rightOp.toFloat must_== 2f
     }
 
     "keep negative sign out of denominator" in new Fixture {
@@ -51,6 +52,54 @@ class ExpressionsSpec extends Specification {
       checkSigns( 4,  8)
       checkSigns( 4, -8)
     }
+  }
 
+  "Expression conversion to string" should {
+
+    trait Fixture extends Scope {
+
+    }
+
+    "Whole numbers (WholeNum)" in new Fixture {
+      val str: String = WholeNum(3).toString
+      str must_== "3"
+    }
+
+    "Decimal numbers (DecimalNum)" in new Fixture {
+      val str: String = DecimalNum(3.5f).toString
+      str must_== "3.5"
+    }
+
+    "Division (Div)" in new Fixture {
+      val str: String = Div(WholeNum(3), WholeNum(5)).toString
+      str must_== "3/5"
+    }
+
+  }
+
+  "Expression precedence places right parenthesis" should {
+
+    trait Fixture extends Scope {
+      implicit def i2e(i: Int): Expr = WholeNum(i)
+    }
+
+    "a-b-(c-d)" in new Fixture {
+      val str = Dif(Dif(1, 2), Dif(3, 4)).toString
+      str must_== "1-2-(3-4)"
+    }
+
+    "(a^b)^c^d" in new Fixture {
+      val str = Pow(Pow(1, 2), Pow(3, 4)).toString
+      str must_== "(1^2)^3^4"
+    }
+
+    "(a+b)*(c-d)" in new Fixture {
+      val str = Mult(Add(1, 2), Dif(3, 4)).toString must_== "(1+2)*(3-4)"
+    }
+
+    "(a+b)^(c*d)" in new Fixture {
+      val str = Pow(Add(1, 2), Mult(3, 4)).toString
+      str must_== "(1+2)^(3*4)"
+    }
   }
 }

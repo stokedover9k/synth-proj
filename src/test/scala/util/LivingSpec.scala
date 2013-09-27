@@ -16,8 +16,8 @@ abstract class LivingSpec extends Specification {
 
   def livingSpecFilename: String
 
-  val dataStartRow: Int
-  val dataStartCol: Int
+  val dataSkipRows: Int
+  val dataSkipCols: Int
   val dataRows: Int
   val dataCols: Int
 
@@ -38,13 +38,13 @@ abstract class LivingSpec extends Specification {
   }
 
   def getDataCol(colIndex: Int): Seq[String] = {
-    livingSpecData.drop(dataStartRow) map {
-      row => row(colIndex)
+    livingSpecData drop dataSkipRows take dataRows map {
+      row => row(colIndex + dataSkipCols)
     }
   }
 
   def getDataRow(rowIndex: Int): Seq[String] = {
-    livingSpecData.drop(dataStartRow)(rowIndex).drop(dataStartCol)
+    livingSpecData.drop(dataSkipRows)(rowIndex) drop dataSkipCols take dataCols
   }
 
   def mustEqualCol[T](col: Seq[T], colNum: Int): Unit = {
@@ -66,7 +66,7 @@ abstract class LivingSpec extends Specification {
   }
 
   def mustEqualFloatCol(col: Seq[Float], colNum: Int): Unit = {
-    val dt = livingSpecData.drop(dataStartRow) map {
+    val dt = livingSpecData.drop(dataSkipRows) map {
       row => row(colNum).toFloat
     }
     seqsMustEqual(col, dt)
