@@ -1,8 +1,6 @@
 package synth
 
-import util.expr._
-import util.expr.Div
-import util.expr.WholeNum
+import util.expr.{Num, Expr, Div, WholeNum}
 
 /**
  * Created with IntelliJ IDEA.
