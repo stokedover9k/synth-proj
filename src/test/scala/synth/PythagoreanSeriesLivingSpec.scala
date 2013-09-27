@@ -50,9 +50,29 @@ class PythagoreanSeriesLivingSpec extends LivingSpec {
       mustEqualRow(indices, 0)
     }
 
+    "compute correct unadjusted frequency ratios to the fundamental" in new Fixture {
+      val ratios = allNotes map { _.generatingExpression.toFloat }
+      mustEqualMappedRow(_.toFloat)(ratios, 4)
+    }
+
+    "compute correct unadjusted frequencies" in new Fixture {
+      val hzs = allNotes map { _.hzUnscaled }
+      mustEqualMappedRow(_.toFloat)(hzs, 5)
+    }
+
+    "compute correct octaves" in new Fixture {
+      val octaves = allNotes map { _.octave }
+      mustEqualRow(octaves, 6)
+    }
+
     "compute correct octave adjustment" in new Fixture {
       val adjustments = allNotes map { _.octaveAdjustment.toFloat }
       mustEqualMappedRow(_.toFloat)(adjustments, 7)
+    }
+
+    "compute correct adjusted ratios (within the octave)" in new Fixture {
+      val ratios = allNotes map { _.hzFactor.toFloat }
+      mustEqualMappedRow(_.toFloat)(ratios, 8)
     }
 
     "compute correct frequencies within the octave" in new Fixture {

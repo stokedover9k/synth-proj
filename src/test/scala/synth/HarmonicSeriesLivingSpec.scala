@@ -23,12 +23,32 @@ class HarmonicSeriesLivingSpec extends LivingSpec {
       lazy val allNotes = 1 to dataRows map { series(_) }
     }
 
-    "compute correct set of indices (col 2)" in new Fixture {
+    "compute correct set of indices (col B)" in new Fixture {
       val indices = allNotes map { _.degree }
       mustEqualCol(indices, 0)
     }
 
-    "compute correct frequencies within the octave (col 10)" in new Fixture {
+    "compute correct unadjusted frequencies (col D)" in new Fixture {
+      val hzs = allNotes map { _.hzUnscaled }
+      mustEqualMappedCol(_.toFloat)(hzs, 2)
+    }
+
+    "compute correct octave (col E)" in new Fixture {
+      val octaves = allNotes map { _.octave + 1 }
+      mustEqualCol(octaves, 3)
+    }
+
+    "compute correct octave adjustment (col F)" in new Fixture {
+      val adjustments = allNotes map { _.octaveAdjustment.toFloat }
+      mustEqualMappedCol(_.toFloat)(adjustments, 4)
+    }
+
+    "compute correct adjusted ratios (within the octave) (col I)" in new Fixture {
+      val ratios = allNotes map { _.hzFactor.toFloat }
+      mustEqualMappedCol(_.toFloat)(ratios, 7)
+    }
+
+    "compute correct frequencies within the octave (col J)" in new Fixture {
       val frequencies = allNotes map {
         _.hz
       } map {   // remap to two decimal places of precision
