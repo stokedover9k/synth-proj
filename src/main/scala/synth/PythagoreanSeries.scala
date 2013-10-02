@@ -19,6 +19,9 @@ case class PythagoreanSeries(fundamental: Float) extends NoteSeries {
   }
 }
 
+object PythagoreanSeries {
 
-
-
+  trait Extracts7Notes extends Series2Scale7[PythagoreanSeries] {
+    override def extract7(s: PythagoreanSeries): Iterable[Float] = -1 to 5 map (s(_).hz)
+  }
+}
