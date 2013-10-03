@@ -39,6 +39,7 @@ class Scale7(private val frequencies: IndexedSeq[Float]) extends Scale {
   def Mixolydian = mode(4)
   def Aeolian = mode(5)
   def Locrian = mode(6)
+  def IonianOctave = mode(7)
 
 }
 

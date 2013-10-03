@@ -5,7 +5,6 @@ import org.specs2.mutable.Specification
 import org.specs2.matcher._
 import scala.util.Sorting
 
-
 class ScaleSpec extends Specification {
 
   "Scales" should {
