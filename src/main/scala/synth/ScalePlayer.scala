@@ -76,7 +76,7 @@ object ScalePlayer {
         }
       else baseScale
 
-    val rebuiltScale: Scale7 = scaleBuilder(modeScale(0))
+    val rebuiltScale: Scale7 = scaleBuilder(modeScale(0).hz)
 
     val line = Main.getLine
     var oscillator: Oscillator = BufferedWaveOscillator(1024, Sine, SAMPLE_RATE, 0)
@@ -88,7 +88,7 @@ object ScalePlayer {
     val buffer = new Array[Float](samplesPerBuffer)
 
     def playScale(scale: Scale): Unit = {
-      0 to scale.size map { modeScale(_) } foreach { frequency: Float =>
+      0 to scale.size map { modeScale(_).hz } foreach { frequency: Float =>
         0 until repeatForHalfSecond foreach { _ =>
           oscillator = oscillator.getSamples(frequency, buffer)
           line.write(buffer.map( y => (y*0.7*64).toByte), 0, buffer.size)

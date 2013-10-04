@@ -12,16 +12,17 @@ import util.expr.{Num, Expr, Div, WholeNum}
 
 case class PythagoreanSeries(fundamental: Float) extends NoteSeries {
 
-  def apply(degree: Int) = Interval(degree, fundamental)
+  def apply(degree: Int) = PythagoreanSeries.Interval(degree, fundamental)
 
-  case class Interval(degree: Int, fundamental: Float) extends NoteSeries.Interval {
-    def generatingExpression: Expr = Div(Num(3), Num(2)).pow(WholeNum(degree))
-  }
 }
 
 object PythagoreanSeries {
+  case class Interval(degree: Int, fundamental: Float) extends NoteSeries.Interval {
+    override def generatingExpression: Expr = Div(Num(3), Num(2)).pow(WholeNum(degree))
+    override def inNextOctave: Interval = Interval(degree, fundamental * 2)
+  }
 
   trait Extracts7Notes extends Series2Scale7[PythagoreanSeries] {
-    override def extract7(s: PythagoreanSeries): Iterable[Float] = -1 to 5 map (s(_).hz)
+    override def extract7(s: PythagoreanSeries): Iterable[Interval] = -1 to 5 map (s(_))
   }
 }
