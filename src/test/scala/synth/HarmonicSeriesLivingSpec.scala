@@ -20,11 +20,11 @@ class HarmonicSeriesLivingSpec extends LivingSpec {
 
       lazy val series = new HarmonicSeries(fundamental)
 
-      lazy val allNotes = 1 to dataRows map { series(_) }
+      lazy val allNotes = 0 until dataRows map { series(_) }
     }
 
     "compute correct set of indices (col B)" in new Fixture {
-      val indices = allNotes map { _.degree }
+      val indices = allNotes map { _.degree + 1 }  // +1 because series is 0-indexed, while spec is 1-indexed
       mustEqualCol(indices, 0)
     }
 
