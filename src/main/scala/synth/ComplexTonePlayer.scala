@@ -26,7 +26,7 @@ object ComplexTonePlayer {
         Component(7f, 0.1f)
       )
 
-    var synthesiser = ToneSynthesiser(2048)
+    var synthesiser: ToneSynthesiser = WavedToneSynthesiser()
 
     val perSec = 5
     val samples = new Array[Float](synthesiser.sampleRate.toInt / perSec)
@@ -42,8 +42,11 @@ object ComplexTonePlayer {
       }
     }
 
-    object ScaleBuilder extends Series2Scale7[HarmonicSeries] with HarmonicSeries.Extracts7Notes
-    val scale = ScaleBuilder buildScale( HarmonicSeries(528f) )
+//    object ScaleBuilder extends Series2Scale7[HarmonicSeries] with HarmonicSeries.Extracts7Notes
+//    val scale = ScaleBuilder buildScale( HarmonicSeries(528f) )
+
+    object ScaleBuilder extends Series2Scale7[PythagoreanSeries] with PythagoreanSeries.Extracts7Notes
+    val scale = ScaleBuilder buildScale PythagoreanSeries(528f)
 
     0 until scale.size map {
       scale(_)
