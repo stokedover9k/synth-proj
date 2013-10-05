@@ -15,6 +15,6 @@ object HarmonicSeries {
   }
 
   trait Extracts7Notes extends Series2Scale7[HarmonicSeries] {
-    override def extract7(s: HarmonicSeries): Iterable[Interval] = 0 until 7 map (s(_))
+    override def extract7(s: HarmonicSeries): Iterable[Interval] = Seq(1, 2, 4, 6, 8, 10, 12) map (s(_))
   }
 }

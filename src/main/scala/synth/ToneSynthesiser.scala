@@ -12,7 +12,7 @@ package synth
 
 class ToneSynthesiser private(
                                buffer: Array[Float],
-                               sampleRate: Float,
+                               val sampleRate: Float,
                                currentTime: Float
                                ) {
 
