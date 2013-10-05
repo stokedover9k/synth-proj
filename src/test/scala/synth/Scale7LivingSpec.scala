@@ -35,7 +35,7 @@ class Scale7LivingSpec extends LivingSpec {
           f => Math.round(f * 100).toFloat / 100
 
         def expectedVals = getDataRow(offset) drop offset take 8 map (_.toFloat)
-        def actualVals = 0 to 7 map (s.value(_)) map to2decimalPlaces
+        def actualVals = 0 to 7 map (s.value(_).hz) map to2decimalPlaces
 
         result(
           (expectedVals, actualVals).zipped.forall {        // Zip expected and actual values: (e1, a1), (e2, a2), ... (e_n, a_n)

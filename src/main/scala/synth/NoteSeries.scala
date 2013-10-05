@@ -68,5 +68,10 @@ object NoteSeries {
      * Frequency of the interval within the fundamental's frequency.
      */
     def hz: Float = hzFactor.toFloat * fundamental
+
+    /*
+     * Interval of the same degree in the next octave.
+     */
+    def inNextOctave: Interval
   }
 }

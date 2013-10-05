@@ -3,15 +3,16 @@ package synth
 import org.specs2.specification.Scope
 import org.specs2.mutable.Specification
 import org.specs2.matcher._
-import scala.util.Sorting
+import synth.NoteSeries.Interval
 
 class ScaleSpec extends Specification {
 
   "Scales" should {
 
     trait Fixture extends Scope {
-      lazy val freqs = Array(528.00, 594.00, 668.25, 704.00, 792.00, 891.00, 1002.38).map(_.toFloat)
-      lazy val scale = Scale7(freqs)
+      lazy val series = PythagoreanSeries(528)
+      lazy val intervals = -1 to 5 map {i => series(i)} sortBy(_.hz)
+      lazy val scale = Scale7(intervals)
 
       case class BeMode(scale: Scale, offset: Int) extends Matcher[Scale] {
         def apply[S <: Scale](s: Expectable[S]) = {
@@ -21,7 +22,7 @@ class ScaleSpec extends Specification {
           // 3. the rest of elements of mode must be twice the first elements (0 to offset) of scale
           def equalSize = s.value.size == scale.size
           def firstNotesMatch = (0 until scale.size - offset).forall { i => s.value(i) == scale(offset + i) }
-          def lastNotesMatch = (0 until offset).forall { i => s.value(scale.size - offset + i) == 2 * scale(i) }
+          def lastNotesMatch = (0 until offset).forall { i => s.value(scale.size - offset + i).hz == 2 * scale(i).hz }
 
           result( equalSize && firstNotesMatch && lastNotesMatch,
             s.description + " is mode %d of\n %s".format(offset, scale),      // message if succeeds
@@ -32,7 +33,7 @@ class ScaleSpec extends Specification {
       }
     }
 
-    "have 8 elements" in new Fixture {
+    "have 7 elements" in new Fixture {
       scale.size must_== 7
     }
 
@@ -49,9 +50,8 @@ class ScaleSpec extends Specification {
 
       val s1 = PythagoreanToScale.buildScale(ps)
 
-      val hzs: Array[Float] = (-1 to 5 map (ps(_).hz)).toArray
-      Sorting.quickSort(hzs)
-      val s2 = Scale7(hzs)
+      val hzs: Array[Interval] = (-1 to 5 map (ps(_))).toArray[Interval]
+      val s2 = Scale7(hzs.sortBy(_.hz))
 
       s1 must BeMode( s2, 0 )
     }
