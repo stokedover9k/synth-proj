@@ -61,7 +61,7 @@ class PythagoreanSeriesLivingSpec extends LivingSpec {
     }
 
     "compute correct octaves" in new Fixture {
-      val octaves = allNotes map { _.octave }
+      val octaves = allNotes map { _.fallsInOctave }
       mustEqualRow(octaves, 6)
     }
 

@@ -9,12 +9,15 @@ case class HarmonicSeries(fundamental: Float) extends NoteSeries {
 }
 
 object HarmonicSeries {
-  case class Interval(degree: Int, fundamental: Float) extends NoteSeries.Interval {
+  case class Interval(degree: Int, fundamental: Float, override val octave: Int = 0)
+    extends NoteSeries.Interval {
+
     override def generatingExpression: Expr = Fraction(degree + 1, 1)
-    override def inNextOctave: Interval = Interval(degree, fundamental * 2)
+    override def octaveUp: Interval = Interval(degree, fundamental, octave + 1)
   }
 
   trait Extracts7Notes extends Series2Scale7[HarmonicSeries] {
-    override def extract7(s: HarmonicSeries): Iterable[Interval] = Seq(1, 2, 4, 6, 8, 10, 12) map (s(_))
+    override def sorted7(s: HarmonicSeries): IndexedSeq[Interval] =
+      (Seq(1, 2, 4, 6, 8, 10, 12) map (s(_))).toArray[Interval].sortBy(_.hz)
   }
 }

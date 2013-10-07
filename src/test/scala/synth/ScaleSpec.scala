@@ -48,7 +48,7 @@ class ScaleSpec extends Specification {
 
       val ps = new PythagoreanSeries(528)
 
-      val s1 = PythagoreanToScale.buildScale(ps)
+      val s1 = PythagoreanToScale.buildScale7(ps)
 
       val hzs: Array[Interval] = (-1 to 5 map (ps(_))).toArray[Interval]
       val s2 = Scale7(hzs.sortBy(_.hz))

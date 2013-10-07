@@ -34,7 +34,7 @@ class HarmonicSeriesLivingSpec extends LivingSpec {
     }
 
     "compute correct octave (col E)" in new Fixture {
-      val octaves = allNotes map { _.octave + 1 }
+      val octaves = allNotes map { _.fallsInOctave + 1 }
       mustEqualCol(octaves, 3)
     }
 

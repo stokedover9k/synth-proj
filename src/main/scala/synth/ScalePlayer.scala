@@ -38,11 +38,11 @@ object ScalePlayer {
       args(0) match {
         case "h" => {
           object ScaleBuilder extends Series2Scale7[HarmonicSeries] with HarmonicSeries.Extracts7Notes
-          f: Float => ScaleBuilder buildScale( HarmonicSeries(f) )
+          f: Float => ScaleBuilder buildScale7( HarmonicSeries(f) )
         }
         case "p" => {
           object ScaleBuilder extends Series2Scale7[PythagoreanSeries] with PythagoreanSeries.Extracts7Notes
-          f: Float => ScaleBuilder buildScale( PythagoreanSeries(f) )
+          f: Float => ScaleBuilder buildScale7( PythagoreanSeries(f) )
         }
         case  s  => {
           System.out.println("[Error]: unknown series type (%s)".format(s))

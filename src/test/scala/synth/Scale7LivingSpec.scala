@@ -26,7 +26,7 @@ class Scale7LivingSpec extends LivingSpec {
 
     lazy val scaleBuilder = new Series2Scale7[PythagoreanSeries] with PythagoreanSeries.Extracts7Notes
 
-    lazy val scale: Scale7 = scaleBuilder.buildScale(new PythagoreanSeries(fundamental))
+    lazy val scale: Scale7 = scaleBuilder.buildScale7(new PythagoreanSeries(fundamental))
 
     case class matchExpectedAt(offset: Int) extends Matcher[Scale] {
       def apply[S <: Scale](s: Expectable[S]) = {
@@ -49,7 +49,7 @@ class Scale7LivingSpec extends LivingSpec {
     }
   }
 
-  "7 note scale constructed from Pythagorean series" should {
+  "7 tone scale constructed from Pythagorean series" should {
 
     "produce correct Ionian mode" in new Fixture {
       scale.Ionian must matchExpectedAt(0)

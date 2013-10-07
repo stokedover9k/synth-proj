@@ -33,6 +33,11 @@ object NoteSeries {
     def degree: Int
 
     /*
+     * The degree in relation to the fundamental where the interval belongs.
+     */
+    def octave: Int = 0
+
+    /*
      * The fundamental frequency of the series.
      */
     def fundamental: Float
@@ -51,13 +56,13 @@ object NoteSeries {
     /*
      * The octave of the unscaled frequency (0 indexed).
      */
-    def octave: Int = (Math.log(hzUnscaled / fundamental) / Math.log(2)).floor.toInt
+    def fallsInOctave: Int = (Math.log(hzUnscaled / fundamental) / Math.log(2)).floor.toInt
 
     /*
      * The factor by which the unscaled frequency is divided to adjust it into
      * the fundamental's octave.
      */
-    def octaveAdjustment: Expr = Fraction(2, 1).pow(WholeNum(octave))
+    def octaveAdjustment: Expr = Fraction(2, 1).pow(WholeNum(fallsInOctave)).mult(Fraction(1, 2).pow(WholeNum(octave)))
 
     /*
      * The ratio of the fundamental to the frequency.
@@ -72,6 +77,6 @@ object NoteSeries {
     /*
      * Interval of the same degree in the next octave.
      */
-    def inNextOctave: Interval
+    def octaveUp: Interval
   }
 }

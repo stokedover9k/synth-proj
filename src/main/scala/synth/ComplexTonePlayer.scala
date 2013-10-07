@@ -46,7 +46,7 @@ object ComplexTonePlayer {
 //    val scale = ScaleBuilder buildScale( HarmonicSeries(528f) )
 
     object ScaleBuilder extends Series2Scale7[PythagoreanSeries] with PythagoreanSeries.Extracts7Notes
-    val scale = ScaleBuilder buildScale PythagoreanSeries(528f)
+    val scale = ScaleBuilder buildScale7 PythagoreanSeries(528f)
 
     0 until scale.size map {
       scale(_)

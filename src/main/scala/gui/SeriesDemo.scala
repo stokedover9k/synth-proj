@@ -32,7 +32,7 @@ object SeriesDemo extends SimpleSwingApplication {
       note.degree
       , note.generatingExpression
       , note.hzUnscaled
-      , note.octave
+      , note.fallsInOctave
       , note.octaveAdjustment
       , note.hzFactor
       , note.hzFactor.toFloat
