@@ -4,7 +4,7 @@ import org.specs2.mutable._
 import org.specs2.specification.Scope
 import synth.scales.MyScale
 import synth.scales.ScaleInterface
-import synth.PythagoreanSeries
+import synth.{NoteSeries, PythagoreanSeries}
 import org.specs2.execute.Result
 
 /**
@@ -28,18 +28,14 @@ class NewScaleSpec extends Specification {
     lazy val series = PythagoreanSeries(528f)
     lazy val intervals = -1 to 5 map { series(_) } sortBy(_.hz)
 
-    lazy val scaleBuilder = MyScale
-    lazy val scale: ScaleInterface = scaleBuilder.build(intervals, notes)
+    lazy val buildScale : (IndexedSeq[NoteSeries.Interval], IndexedSeq[String]) => ScaleInterface = MyScale.apply
+    lazy val scale: ScaleInterface = buildScale(intervals, notes)
 
     def to2Decimals(f: Float) = Math.round(f * 100) / 100f
   }
 
   "New Scale" should {
 
-    "[Check] used intervals match expected values" in new Fixture {
-      (intervals map (_.hz) map to2Decimals, hzs).zipped.forall( (a, b) => a must_== b )
-    }
-    
     "get constructed from a sequence of frequencies" in new Fixture {
       failure("not implemented")
     }
@@ -58,7 +54,7 @@ class NewScaleSpec extends Specification {
 
     "have the right frequencies in sequence" in new Fixture {
       val myhzs = scale.intervals map {_.hz} map to2Decimals
-      (myhzs, hzs).zipped.foreach( (a, b) => a must_== b )
+      (myhzs, hzs).zipped.forall( (a, b) => a must_== b )
     }
   }
 }

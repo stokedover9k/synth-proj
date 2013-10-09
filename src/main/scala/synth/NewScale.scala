@@ -1,7 +1,7 @@
 package synth
 
-import synth.Notes.Name
-import synth.NoteSeries.Interval
+//import synth.Notes.Name
+//import synth.NoteSeries.Interval
 
 /**
  * Created with IntelliJ IDEA.

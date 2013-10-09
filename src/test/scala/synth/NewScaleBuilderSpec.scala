@@ -1,7 +1,7 @@
 package synth
 
-import org.specs2.mutable._
-import org.specs2.specification.Scope
+//import org.specs2.mutable._
+//import org.specs2.specification.Scope
 
 /**
  * Created with IntelliJ IDEA.

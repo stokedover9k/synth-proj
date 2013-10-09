@@ -12,13 +12,13 @@ import synth.NoteSeries.Interval
 
 abstract class ScaleInterface {
 
-  def intervals: IndexedSeq[Interval]
+  def intervals: Seq[Interval]
 
   def interval(index: Int)    : Interval
 
   def interval(note: String)  : Interval
 
-  def notes: IndexedSeq[String]
+  def notes: Seq[String]
 
   def note(index: Int): String
 
@@ -26,8 +26,8 @@ abstract class ScaleInterface {
 
 
 case class MyScale(
-                    intervals: IndexedSeq[Interval],
-                    notes: IndexedSeq[String] = IndexedSeq[String]()
+                    intervals: Seq[Interval],
+                    notes: Seq[String]
                     ) extends ScaleInterface {
 
   def interval(index: Int): Interval = intervals(index)
@@ -35,11 +35,4 @@ case class MyScale(
   def interval(note: String): Interval = interval(notes indexOf note)
 
   def note(index: Int): String = notes(index)
-}
-
-
-
-trait Modes[S <: ScaleInterface] extends ScaleInterface {
-
-  def mode(offset: Int): S
 }
