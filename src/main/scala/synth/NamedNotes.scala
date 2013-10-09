@@ -8,6 +8,8 @@ package synth
  * To change this template use File | Settings | File Templates.
  */
 
+/*
+
 object Notes {
   case class Name protected(override val toString: String) {
     def octave = Name("[" + toString + "]")
@@ -97,3 +99,5 @@ trait SharpsAreFlats extends NamedSharps with NamedFlats {
   override def Fs = Gb
 
 }
+
+*/

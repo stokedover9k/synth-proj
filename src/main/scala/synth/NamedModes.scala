@@ -8,6 +8,8 @@ package synth
  * To change this template use File | Settings | File Templates.
  */
 
+/*
+
 trait Modes[S <: MyScale] {
 
   def modeAt(offset: Int): S
@@ -42,3 +44,4 @@ trait WesternModes[S <: MyScale] extends MakesModes[S] {
   def IonianOctave : S = modeAt( nthModeOffset(7) )
 
 }
+*/

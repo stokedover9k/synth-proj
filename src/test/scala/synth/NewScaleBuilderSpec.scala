@@ -11,6 +11,8 @@ import org.specs2.specification.Scope
  * To change this template use File | Settings | File Templates.
  */
 
+/*
+
 class NewScaleBuilderSpec extends Specification {
 
 
@@ -84,3 +86,5 @@ class NewScaleBuilderSpec extends Specification {
     }
   }
 }
+
+*/

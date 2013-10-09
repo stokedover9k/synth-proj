@@ -10,7 +10,7 @@ import synth.NoteSeries.Interval
  * Time: 3:29 PM
  * To change this template use File | Settings | File Templates.
  */
-
+/*
 abstract class MyScale {
   def size: Int
 
@@ -146,3 +146,4 @@ object WesternScale12 extends CreatesScaleWithModes[WesternScale12] {
   override protected def buildFromNamedIntervals(intervals: IndexedSeq[NamedInterval]): WesternScale12 =
     new WesternScale12(intervals)
 }
+*/
