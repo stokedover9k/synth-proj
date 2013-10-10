@@ -46,7 +46,7 @@ class NewScaleSpec extends Specification {
     }
 
     "have the right notes in sequence" in new Fixture {
-      (scale.notes, notes).zipped.forall { (a, b) => a.name must_== b }
+      (scale.notes, notes).zipped.forall { (a, b) => a must_== b }
     }
 
     "have the right frequencies in sequence" in new Fixture {

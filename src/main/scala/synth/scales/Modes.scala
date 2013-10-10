@@ -13,27 +13,23 @@ import synth.scale.Note
 
 trait Modes[S <: ScaleInterface] extends ScaleInterface {
 
-
   def mode(offset: Int): S = {
     val (iHead, iTail) = intervalCutter(offset)
     val (nHead, nTail) = noteCutter(offset)
-    buildScale(
-      iTail ++ (iHead map intervalToEndMapper),
-      nTail ++ (nHead map noteToEndMapper)
+    buildScaleFromIntervalsAndNotes(
+      iTail ++ (iHead map (_.octaveUp)),
+      nTail ++ (nHead map (_.octaveUp))
     )
   }
 
-  protected def noteToEndMapper: Note => Note
-  protected def intervalToEndMapper: Interval => Interval
-
   /*
-   * Takes sequence S and a cut index C and produces a pair of sequences (Sh, St)
-   * where Sh is the head which gets remapped to the end of the sequence sequence
-   * using remap***ToEnd and St becomes the unaltered beginning of the new mode.
+   * Takes sequence S and a cut number C and produces a pair of sequences (Sh, St)
+   * where Sh is the sub-sequence which gets remapped to the next octave and added
+   * to the end of the new mode (after St).
    */
   protected def cutSeqForMode[T]: Seq[T] => Int => (Seq[T], Seq[T])
 
-  protected def buildScale: (Seq[Interval], Seq[Note]) => S
+  protected def buildScaleFromIntervalsAndNotes: (Seq[Interval], Seq[Note]) => S
 
   private def intervalCutter = cutSeqForMode(intervals)
   private def noteCutter = cutSeqForMode(notes)

@@ -20,18 +20,14 @@ class ModeScale(override val intervals: Seq[Interval],
   extends MyScale(intervals, notes)
   with Modes[ModeScale] {
 
-  protected def noteToEndMapper: (Note) => Note = (n: Note) => n.octaveUp
-
-  protected def intervalToEndMapper: (Interval) => Interval = (i: Interval) => i.octaveUp
-
   /*
-     * Takes sequence S and a cut index C and produces a pair of sequences (Sh, St)
-     * where Sh is the head which gets remapped to the end of the sequence sequence
-     * using remap***ToEnd and St becomes the unaltered beginning of the new mode.
-     */
-  protected def cutSeqForMode[T]: (Seq[T]) => (Int) => (Seq[T], Seq[T]) =
+   * Takes sequence S and a cut number C and produces a pair of sequences (Sh, St)
+   * where Sh is the sub-sequence which gets remapped to the next octave and added
+   * to the end of the new mode (after St).
+   */
+protected def cutSeqForMode[T]: (Seq[T]) => (Int) => (Seq[T], Seq[T]) =
     (s: Seq[T]) => (n: Int) => s.splitAt(n)
 
-  protected def buildScale: (Seq[Interval], Seq[Note]) => ModeScale =
+  protected def buildScaleFromIntervalsAndNotes: (Seq[Interval], Seq[Note]) => ModeScale =
     (is, ns) => new ModeScale(is, ns)
 }
