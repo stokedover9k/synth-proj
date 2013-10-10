@@ -1,6 +1,7 @@
 package synth.scales
 
 import synth.NoteSeries.Interval
+import synth.scale.Note
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,23 +17,23 @@ abstract class ScaleInterface {
 
   def interval(index: Int)    : Interval
 
-  def interval(note: String)  : Interval
+  def interval(note: Note)  : Interval
 
-  def notes: Seq[String]
+  def notes: Seq[Note]
 
-  def note(index: Int): String
+  def note(index: Int): Note
 
 }
 
 
 case class MyScale(
                     intervals: Seq[Interval],
-                    notes: Seq[String]
+                    notes: Seq[Note]
                     ) extends ScaleInterface {
 
   def interval(index: Int): Interval = intervals(index)
 
-  def interval(note: String): Interval = interval(notes indexOf note)
+  def interval(note: Note): Interval = interval(notes indexOf note)
 
-  def note(index: Int): String = notes(index)
+  def note(index: Int): Note = notes(index)
 }

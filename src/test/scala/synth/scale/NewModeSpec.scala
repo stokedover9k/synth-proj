@@ -18,15 +18,15 @@ class NewModeSpec extends Specification {
 
   trait Fixture extends Scope {
     lazy val hzs: IndexedSeq[Float] = IndexedSeq(528.00, 594.00, 668.25, 704.00, 792.00, 891.00, 1002.38) map (_.toFloat)
-    lazy val notes: IndexedSeq[String] = IndexedSeq("C", "D", "E", "F", "G", "A", "B")
+    lazy val notes: IndexedSeq[Note] = IndexedSeq("C", "D", "E", "F", "G", "A", "B").map( Note.makeNote(_, 0).get )
 
     lazy val hzs2: IndexedSeq[Float] = IndexedSeq(668.25, 704.00, 792.00, 891.00, 1002.38, 1056.00, 1188.00) map (_.toFloat)
-    lazy val notes2: IndexedSeq[String] = IndexedSeq("E", "F", "G", "A", "B", "C", "D")
+    lazy val notes2: IndexedSeq[Note] = (notes.splitAt(2) match { case (h, t) => t ++ (h map (_.octaveUp)) })
 
     lazy val series = PythagoreanSeries(528f)
     lazy val intervals = -1 to 5 map { series(_) } sortBy(_.hz)
 
-    lazy val buildScale : (IndexedSeq[NoteSeries.Interval], IndexedSeq[String]) => ModeScale =
+    lazy val buildScale : (IndexedSeq[NoteSeries.Interval], IndexedSeq[Note]) => ModeScale =
       (is, ns) => new ModeScale(is, ns)
 
     lazy val scale: ModeScale = buildScale(intervals, notes)

@@ -1,6 +1,7 @@
 package synth.scales
 
 import synth.NoteSeries.Interval
+import synth.scale.Note
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,12 +15,12 @@ import synth.NoteSeries.Interval
  * the notes are cut at indicated index and wrapped around.
  * DO NOT use this class for scales whose last note is equivalent to (octave of) the first.
  */
-class ModeScale( override val intervals: Seq[Interval],
-                   override val notes: Seq[String] )
+class ModeScale(override val intervals: Seq[Interval],
+                override val notes: Seq[Note])
   extends MyScale(intervals, notes)
   with Modes[ModeScale] {
 
-  protected def noteToEndMapper: (String) => String = (s: String) => s
+  protected def noteToEndMapper: (Note) => Note = (n: Note) => n.octaveUp
 
   protected def intervalToEndMapper: (Interval) => Interval = (i: Interval) => i.octaveUp
 
@@ -31,6 +32,6 @@ class ModeScale( override val intervals: Seq[Interval],
   protected def cutSeqForMode[T]: (Seq[T]) => (Int) => (Seq[T], Seq[T]) =
     (s: Seq[T]) => (n: Int) => s.splitAt(n)
 
-  protected def buildScale: (Seq[Interval], Seq[String]) => ModeScale =
+  protected def buildScale: (Seq[Interval], Seq[Note]) => ModeScale =
     (is, ns) => new ModeScale(is, ns)
 }

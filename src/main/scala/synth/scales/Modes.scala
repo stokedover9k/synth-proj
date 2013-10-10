@@ -1,6 +1,7 @@
 package synth.scales
 
 import synth.NoteSeries.Interval
+import synth.scale.Note
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,7 +23,7 @@ trait Modes[S <: ScaleInterface] extends ScaleInterface {
     )
   }
 
-  protected def noteToEndMapper: String => String
+  protected def noteToEndMapper: Note => Note
   protected def intervalToEndMapper: Interval => Interval
 
   /*
@@ -32,7 +33,7 @@ trait Modes[S <: ScaleInterface] extends ScaleInterface {
    */
   protected def cutSeqForMode[T]: Seq[T] => Int => (Seq[T], Seq[T])
 
-  protected def buildScale: (Seq[Interval], Seq[String]) => S
+  protected def buildScale: (Seq[Interval], Seq[Note]) => S
 
   private def intervalCutter = cutSeqForMode(intervals)
   private def noteCutter = cutSeqForMode(notes)
