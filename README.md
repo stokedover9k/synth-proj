@@ -18,11 +18,11 @@ The Living Specs extend the LivingSpec class (*src/test/scala/util/LivingSpec.sc
 
 The following are some of the Living Specs (in *src/test/scala/synth/*):
 
-+	HarmonicSeriesLivingSpec.scala
++ HarmonicSeriesLivingSpec.scala
 
 	> Ensures that the Harmonic series is computed correctly.
 
-+	PythagoreanSeriesLivingSpec.scala
++ PythagoreanSeriesLivingSpec.scala
 
 	> Ensures that the Pythagorean series is computed correctly.
 
@@ -30,7 +30,7 @@ The following are some of the Living Specs (in *src/test/scala/synth/*):
 
 	> Ensures that the Even Temperment series is computed correctly.
 
-+	scales/ModesLivingSpec.scala
++ scales/ModesLivingSpec.scala
 
 	> Ensures that the Pythagorean series modes are computed correctly.
 
