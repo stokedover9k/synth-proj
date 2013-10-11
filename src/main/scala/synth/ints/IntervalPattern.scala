@@ -11,22 +11,22 @@ package synth.ints
 object IntervalPattern {
 
   abstract class Interval {
-    def apply: Note => Note
+    def apply: BasicNote => BasicNote
   }
 
   object HalfStep extends Interval {
-    def apply: (Note) => Note = _.upHalf
+    def apply: (BasicNote) => BasicNote = _.upHalf
   }
 
   object WholeStep extends Interval {
-    def apply: (Note) => Note = _.upWhole
+    def apply: (BasicNote) => BasicNote = _.upWhole
   }
 
   object CommaStep extends Interval {
-    def apply: (Note) => Note = _.toFlat
+    def apply: (BasicNote) => BasicNote = _.toFlat
   }
 
-  def getNotes(note: Note, pattern: Seq[Interval]): Seq[Note] = {
+  def getNotes(note: BasicNote, pattern: Seq[Interval]): Seq[BasicNote] = {
     pattern match {
       case Seq() => Seq(note)
       case s => note +: getNotes(pattern.head.apply(note), pattern.tail)
