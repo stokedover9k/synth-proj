@@ -22,7 +22,7 @@ The following are some of the Living Specs (in *src/test/scala/synth/*):
 
 	> Ensures that the Harmonic series is computed correctly.
 
-+	PythagoreanSeriesLivingSpec.scala
++	ModesLivingSpec.scala
 
 	> Ensure that the Pythagorean series is computed correctly.
 

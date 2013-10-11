@@ -1,7 +1,7 @@
 package synth.scales
 
 
-class Scale(notes: Seq[Note]) extends Modes[Scale] {
+class Scale(val notes: Seq[Note]) extends Modes[Scale] {
 
   protected def builder: ModeBuilder[Scale] = new ModeCutter[Scale] {
     def cutSequenceForMode[T](seq: Seq[T], offset: Int): (Seq[T], Seq[T]) = seq.splitAt(offset)
@@ -10,6 +10,8 @@ class Scale(notes: Seq[Note]) extends Modes[Scale] {
 
     def build(notes: Seq[Note]): Scale = new Scale(notes)
   }
+
+  def apply(index: Int): Note = notes(index)
 
   override def toString: String = notes.mkString("Scale:[", " ", "]")
 }
