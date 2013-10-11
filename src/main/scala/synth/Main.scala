@@ -1,6 +1,7 @@
 package synth
 
 import javax.sound.sampled._
+import synth.sounds.{Sine, BufferedWaveOscillator, Oscillator}
 
 /**
  * Created with IntelliJ IDEA.

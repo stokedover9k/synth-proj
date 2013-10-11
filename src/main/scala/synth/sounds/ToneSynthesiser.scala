@@ -1,4 +1,6 @@
-package synth
+package synth.sounds
+
+import synth.sounds.{ComplexTone, Sine, CreatesWaves, Wave}
 
 /**
  * Created with IntelliJ IDEA.

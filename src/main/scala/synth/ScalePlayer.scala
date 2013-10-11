@@ -1,5 +1,7 @@
 package synth
 
+import synth.sounds.{Sine, BufferedWaveOscillator, Oscillator}
+
 /**
  * Created with IntelliJ IDEA.
  * User: stoked

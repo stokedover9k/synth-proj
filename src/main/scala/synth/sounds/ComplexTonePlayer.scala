@@ -1,6 +1,9 @@
-package synth
+package synth.sounds
 
-import synth.ComplexTone.Component
+import ComplexTone.Component
+import synth._
+import ComplexTone.Component
+import ComplexTone.Component
 
 /**
  * Created with IntelliJ IDEA.

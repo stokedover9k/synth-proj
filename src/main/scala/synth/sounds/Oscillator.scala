@@ -1,4 +1,4 @@
-package synth
+package synth.sounds
 
 abstract class Oscillator {
 

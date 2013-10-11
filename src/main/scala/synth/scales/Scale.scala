@@ -1,39 +1,52 @@
 package synth.scales
 
-import synth.NoteSeries.Interval
-import synth.scale.Note
 
-/**
- * Created with IntelliJ IDEA.
- * User: stoked
- * Date: 10/8/13
- * Time: 10:32 PM
- * To change this template use File | Settings | File Templates.
- */
+class Scale(notes: Seq[Note]) extends Modes[Scale] {
 
-abstract class ScaleInterface {
+  protected def builder: ModeBuilder[Scale] = new ModeCutter[Scale] {
+    def cutSequenceForMode[T](seq: Seq[T], offset: Int): (Seq[T], Seq[T]) = seq.splitAt(offset)
 
-  def intervals: Seq[Interval]
+    def notes: Seq[Note] = Scale.this.notes
 
-  def interval(index: Int)    : Interval
+    def build(notes: Seq[Note]): Scale = new Scale(notes)
+  }
 
-  def interval(note: Note)  : Interval
-
-  def notes: Seq[Note]
-
-  def note(index: Int): Note
-
+  override def toString: String = notes.mkString("Scale:[", " ", "]")
 }
 
 
-case class MyScale(
-                    intervals: Seq[Interval],
-                    notes: Seq[Note]
-                    ) extends ScaleInterface {
+class OctaveScale(notes: Seq[Note]) extends Scale(notes) with Modes[OctaveScale] {
 
-  def interval(index: Int): Interval = intervals(index)
+  override protected def builder: ModeBuilder[OctaveScale] = new ModeCutter[OctaveScale] {
+    def cutSequenceForMode[T](seq: Seq[T], offset: Int): (Seq[T], Seq[T]) =
+      (seq.tail.take(offset), seq.drop(offset))
 
-  def interval(note: Note): Interval = interval(notes indexOf note)
+    def notes: Seq[Note] = OctaveScale.this.notes
 
-  def note(index: Int): Note = notes(index)
+    def build(notes: Seq[Note]): OctaveScale = new OctaveScale(notes)
+  }
+}
+
+
+class Scale7 protected(notes: Seq[Note]) extends OctaveScale(notes) {
+
+  def Ionian = mode(0)
+  def Dorian = mode(1)
+  def Phrygian = mode(2)
+  def Lydian = mode(3)
+  def Mixolydian = mode(4)
+  def Aeolian = mode(5)
+  def Locrian = mode(6)
+  def IonianOctave = mode(7)
+
+}
+
+object Scale7 {
+  def apply(notes: Seq[Note]): Scale7 = {
+    notes.size match {
+      case 7 => apply( notes :+ notes.head.octaveUp )
+      case 8 => new Scale7(notes)
+      case s => sys.error("Attempting to construct a Scale7 (heptatonic) with %d notes (needs 7 or 8).".format(s))
+    }
+  }
 }

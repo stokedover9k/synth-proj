@@ -1,4 +1,4 @@
-package synth.ints
+package synth.scales
 
 /**
  * Created with IntelliJ IDEA.

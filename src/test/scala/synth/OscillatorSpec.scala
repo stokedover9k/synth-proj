@@ -2,6 +2,7 @@ package synth
 
 import org.specs2.mutable._
 import org.specs2.specification.Scope
+import synth.sounds.{Sine, BufferedWaveOscillator, Oscillator}
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,4 +1,4 @@
-package synth.ints
+package synth.scales
 
 import synth.{PythagoreanSeries, NoteSeries}
 
@@ -79,9 +79,12 @@ object PythagBuild {
   def heptoIntervals(fundamental: Float): Seq[Note] = {
     val series = PythagoreanSeries(fundamental)
     val intervals: Seq[NoteSeries.Interval] =
-      (-1 to 5 map (series(_))).sortBy(_.hz) :+ series(12)  // add octave after sorting so thatit stays at the end
+      (-1 to 5 map (series(_))).sortBy(_.hz) :+ series(0)  // add octave after sorting so that it stays at the end
     toNotes(intervals, heptoPatternNotes)
   }
+
+  def fullScale(fundamental: Float): OctaveScale = new OctaveScale(fullIntervals(fundamental))
+  def heptoScale(fundamental: Float): Scale7 = Scale7(heptoIntervals(fundamental))
 
   def main(args: Array[String]): Unit = {
 
@@ -98,5 +101,10 @@ object PythagBuild {
 
     println(fullIntervals(528f))
     println(heptoIntervals(528f))
+
+    println(fullScale(528f))
+    println(heptoScale(528f))
+    println(heptoScale(528f).Locrian)
+
   }
 }
