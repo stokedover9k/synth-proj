@@ -1,4 +1,4 @@
-package synth
+package synth.sounds
 
 import org.specs2.mutable._
 import org.specs2.specification.Scope
