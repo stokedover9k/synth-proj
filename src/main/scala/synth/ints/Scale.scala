@@ -11,7 +11,7 @@ import synth.NoteSeries
  */
 
 case class Note(note: BasicNote, interval: NoteSeries.Interval) {
-  override def toString: String = note.toString + interval.octave
+  override def toString: String = "%s%d[%.2f]".format(note.toString, interval.octave, interval.hz)
 
   def octaveUp: Note = Note(note, interval.octaveUp)
 }
@@ -24,7 +24,7 @@ abstract class AbsScale {
 
 class Scale(override val notes: Seq[Note]) extends AbsScale with Modes[Scale] {
 
-  def builder: ModeBuilder[Scale] = new ModeCutter[Scale] {
+  protected def builder: ModeBuilder[Scale] = new ModeCutter[Scale] {
     def cutSequenceForMode[T](seq: Seq[T], offset: Int): (Seq[T], Seq[T]) = seq.splitAt(offset)
 
     def notes: Seq[Note] = Scale.this.notes
@@ -33,9 +33,10 @@ class Scale(override val notes: Seq[Note]) extends AbsScale with Modes[Scale] {
   }
 }
 
+
 class OctaveScale(notes: Seq[Note]) extends Scale(notes) with Modes[OctaveScale] {
 
-  override def builder: ModeBuilder[OctaveScale] = new ModeCutter[OctaveScale] {
+  override protected def builder: ModeBuilder[OctaveScale] = new ModeCutter[OctaveScale] {
     def cutSequenceForMode[T](seq: Seq[T], offset: Int): (Seq[T], Seq[T]) =
       (seq.tail.take(offset), seq.drop(offset))
 
@@ -49,6 +50,7 @@ class OctaveScale(notes: Seq[Note]) extends Scale(notes) with Modes[OctaveScale]
 trait ModeBuilder[+S <: Scale] {
   def build(offset: Int): S
 }
+
 
 trait ModeCutter[+S <: Scale] extends ModeBuilder[S] {
 
@@ -70,5 +72,5 @@ trait Modes[+ScaleType <: Scale] {
 
   def mode(offset: Int): ScaleType = builder.build(offset)
 
-  def builder: ModeBuilder[ScaleType]
+  protected def builder: ModeBuilder[ScaleType]
 }

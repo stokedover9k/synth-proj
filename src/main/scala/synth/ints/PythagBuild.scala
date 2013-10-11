@@ -1,5 +1,7 @@
 package synth.ints
 
+import synth.{PythagoreanSeries, NoteSeries}
+
 /**
  * Created with IntelliJ IDEA.
  * User: stoked
@@ -10,13 +12,15 @@ package synth.ints
 
 object PythagBuild {
 
-  private val fullPattern = Seq(1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1)
+  private lazy val fullIntervalPattern = toIntervals(Seq(1, 1, 1, 1, 2, 1, 0, 1, 1, 1, 1, 1, 2))
 
-  private val fullIntervalPattern = toIntervals(fullPattern)
+  private lazy val fullPatternNotes = IntervalPattern.getNotes(new Whole('C'), fullIntervalPattern)
 
-  private val heptoPattern = Seq(2, 2, 1, 2, 2, 2, 1)
+  private lazy val fullPattern = IntervalPattern(Seq(1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1))
 
-  private val heptoIntervalPattern = toIntervals(heptoPattern)
+  private lazy val heptoIntervalPattern = Seq(2, 2, 1, 2, 2, 2, 1)
+
+  private lazy val heptoPatternNotes = fullPattern.getNotes(fullPatternNotes, heptoIntervalPattern)
 
   private def toIntervals(pattern: Seq[Int]): Seq[IntervalPattern.Interval] = {
     pattern map {
@@ -29,11 +33,9 @@ object PythagBuild {
     }
   }
 
-  private lazy val fullPatternNotes = IntervalPattern.getNotes(new Whole('C'), fullIntervalPattern)
-
   def tagWithOctave(notes: Seq[BasicNote]): Seq[Int] = {
     val first = notes.head
-    var octave = 0
+    var octave = -1  // start at -1, because the very first note will raise it to 0
 
     def toOctave(n: BasicNote) = {
       if (n.toString == first.toString) octave = octave + 1
@@ -43,13 +45,58 @@ object PythagBuild {
     notes map toOctave
   }
 
+  def intervalToOctave(interval: NoteSeries.Interval, octave: Int): NoteSeries.Interval = {
+    if (octave < interval.octave)
+      throw sys.error("Trying to lower an Interval's octave.")
+    else if (interval.octave == octave)
+      interval
+    else
+      intervalToOctave(interval.octaveUp, octave)
+  }
 
+  def tagOctaves(notes: Seq[BasicNote]) =
+    (notes, tagWithOctave(notes)).zipped
+
+  private def toNotes(intervals: Seq[NoteSeries.Interval], notes: Seq[BasicNote]): Seq[Note] = {
+    val tagged = tagOctaves(notes).toSeq
+    (intervals, tagged).zipped.map {
+      case (i: NoteSeries.Interval, note) => {
+        note match {
+          case (n: BasicNote, o: Int) => Note(n, intervalToOctave(i, o))
+        }
+      }
+    }
+  }
+
+  def fullIntervals(fundamental: Float): Seq[Note] = {
+    val series = PythagoreanSeries(fundamental)
+    val intervals: Seq[NoteSeries.Interval] = {
+      (-1 to 11 map (series(_))).sortBy(_.hz) :+ series(12)  // add octave after sorting so that it stays at the end
+    }
+    toNotes(intervals, fullPatternNotes)
+  }
+
+  def heptoIntervals(fundamental: Float): Seq[Note] = {
+    val series = PythagoreanSeries(fundamental)
+    val intervals: Seq[NoteSeries.Interval] =
+      (-1 to 5 map (series(_))).sortBy(_.hz) :+ series(12)  // add octave after sorting so thatit stays at the end
+    toNotes(intervals, heptoPatternNotes)
+  }
 
   def main(args: Array[String]): Unit = {
 
     println(fullPatternNotes)
-
-    (fullPatternNotes, tagWithOctave(fullPatternNotes)).zipped.foreach( (a,b) => print(a.toString + b + " ") )
+    tagOctaves(fullPatternNotes).foreach {
+      (a, b) => print(a.toString + b + " ")
+    }
     println()
+
+    tagOctaves(heptoPatternNotes).foreach {
+      (a, b) => print(a.toString + b + " ")
+    }
+    println()
+
+    println(fullIntervals(528f))
+    println(heptoIntervals(528f))
   }
 }
