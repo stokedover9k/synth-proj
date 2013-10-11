@@ -17,11 +17,15 @@ case class PythagoreanSeries(fundamental: Float) extends NoteSeries {
 }
 
 object PythagoreanSeries {
+
   case class Interval(degree: Int, fundamental: Float, override val octave: Int = 0)
     extends NoteSeries.Interval {
 
     override def generatingExpression: Expr = Div(Num(3), Num(2)).pow(WholeNum(degree))
+
     override def octaveUp: Interval = Interval(degree, fundamental, octave + 1)
+
+    override def octaveDown: NoteSeries.Interval = Interval(degree, fundamental, octave - 1)
   }
 
   trait Extracts7Notes extends Series2Scale7[PythagoreanSeries] {
@@ -33,4 +37,5 @@ object PythagoreanSeries {
     override def sorted14(s: PythagoreanSeries): IndexedSeq[Interval] =
       (-1 to 12 map (s(_))).toArray[Interval].sortBy(_.hz)
   }
+
 }

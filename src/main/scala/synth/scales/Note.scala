@@ -14,4 +14,6 @@ case class Note(note: BasicNote, interval: NoteSeries.Interval) {
   override def toString: String = "%s%d[%.2f]".format(note.toString, interval.octave, interval.hz)
 
   def octaveUp: Note = Note(note, interval.octaveUp)
+
+  def octaveDown: Note = Note(note, interval.octaveDown)
 }

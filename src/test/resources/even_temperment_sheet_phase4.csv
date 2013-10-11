@@ -1,0 +1,16 @@
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+,,,,,,,,Base Frequency,,"""Cents""",,Name,aka,Cents  of pure intervals
+,,,,,,,,528,,0,,Unison,Tonic,0
+,,,,,,,,559.40,,100,,Minor Second,Semi-tone,111.73
+,,,,,,,,592.66,,200,,Major Second,Whole tone,203.91
+,,,,,,,,627.90,,300,,Minor Third,,315.64
+,,,,,,,,665.24,,400,,Major Third,,386.31
+,,,,,,,,704.80,,500,,Perfect Fourth,,498.04
+,,,,,,,,746.70,,600,,Diminished Fifth,Tritone,590.22 or 609.78
+,,,,,,,,791.11,,700,,Perfect Fifth,,701.95
+,N Intervals,12,,,,,,838.15,,800,,Minor Sixth,,813.69
+,Interval Factor,1.059463,,,,,,887.99,,900,,Major Sixth,,884.36
+,,,,,,,,940.79,,1000,,Minor Seventh,,996.09
+,,,,,,,,996.73,,1100,,Major Seventh,,1088.27
+,,,,,,,,1056,,1200,,Octave,,1200

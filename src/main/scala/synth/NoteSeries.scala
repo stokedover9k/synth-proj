@@ -78,5 +78,10 @@ object NoteSeries {
      * Interval of the same degree in the next octave.
      */
     def octaveUp: Interval
+
+    /*
+     * Interval of the same degree in the previous octave.
+     */
+    def octaveDown: Interval
   }
 }

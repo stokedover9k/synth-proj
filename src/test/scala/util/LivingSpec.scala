@@ -33,7 +33,7 @@ abstract class LivingSpec extends Specification {
   def seqsMustEqual[T](col1: Seq[T], col2: Seq[T]): Unit = {
     col1.size must_== col2.size
     col1 zip col2 foreach {
-      case (a, b) => a must_== b
+      case (a, b) => a must_== b or failure("found %s\nexpected %s".format(col1.toString, col2.toString))
     }
   }
 
