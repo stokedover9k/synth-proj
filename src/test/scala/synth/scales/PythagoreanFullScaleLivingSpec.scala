@@ -39,7 +39,7 @@ class PythagoreanFullScaleLivingSpec extends LivingSpec {
       livingSpecData(31)(8) = "F#" // switch flat and sharp
       livingSpecData(31)(9) = "Gb"
 
-      lazy val scale = PythagBuild.fullScale(fundamental)
+      lazy val scale = PythagScaleBuilder.fullScale(fundamental)
 
       lazy val allNotes = 0 until dataCols map {
         scale(_)

@@ -23,7 +23,7 @@ class ModesLivingSpec extends LivingSpec {
 
     lazy val fundamental: Float = livingSpecData(dataSkipRows)(dataSkipCols).toFloat
 
-    lazy val scale: Scale7 = PythagBuild.heptoScale(fundamental)
+    lazy val scale: Scale7 = PythagScaleBuilder.heptoScale(fundamental)
 
     case class matchExpectedAt(offset: Int) extends Matcher[Scale] {
       def apply[S <: Scale](s: Expectable[S]) = {
