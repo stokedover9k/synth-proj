@@ -22,13 +22,21 @@ The following are some of the Living Specs (in *src/test/scala/synth/*):
 
 	> Ensures that the Harmonic series is computed correctly.
 
-+	ModesLivingSpec.scala
++	PythagoreanSeriesLivingSpec.scala
 
-	> Ensure that the Pythagorean series is computed correctly.
+	> Ensures that the Pythagorean series is computed correctly.
 
-+	Scale7LivingSpec.scala
++ EvenTempSeriesLivingSpec
 
-	> Ensures that the modes of the 7-Note scales built from the Pythagorean series are computed correctly.
+	> Ensures that the Even Temperment series is computed correctly.
+
++	scales/ModesLivingSpec.scala
+
+	> Ensures that the Pythagorean series modes are computed correctly.
+
++ scales/PythagoreanFullScaleLivingSpec.scala
+
+	> Ensures that the full scale (14 notes) are created correctly using the Pythagorean series.
 
 Running the Specifications
 --------------------------
