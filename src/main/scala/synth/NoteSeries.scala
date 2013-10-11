@@ -83,5 +83,10 @@ object NoteSeries {
      * Interval of the same degree in the previous octave.
      */
     def octaveDown: Interval
+
+    /*
+     * Distance between this and another interval.
+     */
+    def distance(other: Interval): Expr = hzFactor div other.hzFactor
   }
 }

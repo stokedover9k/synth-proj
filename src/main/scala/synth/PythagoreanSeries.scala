@@ -1,6 +1,7 @@
 package synth
 
-import util.expr.{Num, Expr, Div, WholeNum}
+import util.expr._
+import util.expr.WholeNum
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,7 +22,7 @@ object PythagoreanSeries {
   case class Interval(degree: Int, fundamental: Float, override val octave: Int = 0)
     extends NoteSeries.Interval {
 
-    override def generatingExpression: Expr = Div(Num(3), Num(2)).pow(WholeNum(degree))
+    override def generatingExpression: Expr = Fraction(Num(3), Num(2)).pow(WholeNum(degree))
 
     override def octaveUp: Interval = Interval(degree, fundamental, octave + 1)
 
