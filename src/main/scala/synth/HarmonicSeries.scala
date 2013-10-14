@@ -1,6 +1,7 @@
 package synth
 
 import util.expr.{Fraction, Expr}
+import scala.collection.mutable
 
 case class HarmonicSeries(fundamental: Float) extends NoteSeries {
 
@@ -25,4 +26,18 @@ object HarmonicSeries {
       (Seq(1, 2, 4, 6, 8, 10, 12) map (s(_))).toArray[Interval].sortBy(_.hz)
   }
 
+  def sorted13(s: HarmonicSeries): IndexedSeq[Interval] = {
+    def addVals(m: mutable.HashMap[Float, Interval], index: Int, num: Int): mutable.HashMap[Float, Interval] = {
+      val i = s(index)
+      if (num <= 0)
+        m
+      else if (m.contains(i.hz))
+        addVals(m, index + 1, num)
+      else {
+        m.put(i.hz, i)
+        addVals(m, index + 1, num - 1)
+      }
+    }
+    addVals(new mutable.HashMap[Float, Interval], 0, 13).values.toIndexedSeq.sortBy(_.hz)
+  }
 }
