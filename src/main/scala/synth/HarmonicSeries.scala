@@ -2,6 +2,7 @@ package synth
 
 import util.expr.{Fraction, Expr}
 import scala.collection.mutable
+import synth.oldscales.Series2Scale7
 
 case class HarmonicSeries(fundamental: Float) extends NoteSeries {
 

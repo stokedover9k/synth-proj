@@ -1,6 +1,7 @@
-package synth
+package synth.oldscales
 
 import synth.NoteSeries.Interval
+import synth.NoteSeries
 
 /**
  * Created with IntelliJ IDEA.

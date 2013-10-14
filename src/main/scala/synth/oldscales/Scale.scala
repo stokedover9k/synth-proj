@@ -1,4 +1,6 @@
-package synth
+package synth.oldscales
+
+import synth.NoteSeries
 
 /**
  * Created with IntelliJ IDEA.

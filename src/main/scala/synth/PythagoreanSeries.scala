@@ -2,6 +2,7 @@ package synth
 
 import util.expr._
 import util.expr.WholeNum
+import synth.oldscales.{Series2Scale14, Series2Scale7}
 
 /**
  * Created with IntelliJ IDEA.

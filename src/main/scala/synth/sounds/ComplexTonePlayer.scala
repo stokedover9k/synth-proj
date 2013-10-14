@@ -4,6 +4,7 @@ import ComplexTone.Component
 import synth._
 import ComplexTone.Component
 import ComplexTone.Component
+import synth.oldscales.Series2Scale7
 
 /**
  * Created with IntelliJ IDEA.

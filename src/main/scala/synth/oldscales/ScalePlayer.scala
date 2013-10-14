@@ -1,6 +1,7 @@
-package synth
+package synth.oldscales
 
 import synth.sounds.{Sine, BufferedWaveOscillator, Oscillator}
+import synth.{PythagoreanSeries, HarmonicSeries, Main}
 
 /**
  * Created with IntelliJ IDEA.
