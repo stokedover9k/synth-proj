@@ -1,7 +1,7 @@
 package gui
 
 import scala.swing._
-import synth.scales.{PythagScaleBuilder, Scale}
+import synth.scales.{HarmonicScaleBuilder, EvenTempScaleBuilder, PythagScaleBuilder, Scale}
 import scala.swing.event.{EditDone, ActionEvent, ButtonClicked}
 
 /**
@@ -20,7 +20,7 @@ object DemoShowScales extends SimpleSwingApplication {
       add(scaleChoices, BorderPanel.Position.North)
       add(scaleDisplay, BorderPanel.Position.Center)
     }
-    size = new Dimension(600, 400)
+    size = new Dimension(600, 600)
   }
 
   val fundamentalTextField = new TextField("528", 5)
@@ -31,15 +31,27 @@ object DemoShowScales extends SimpleSwingApplication {
   }
 
   val scales = Map[String, () => Scale](
+    "Full (Pythagorean)" -> {
+      () => PythagScaleBuilder.fullScale(fundamental)
+    },
     "Heptatonic (Pythagorean)" -> {
       () => PythagScaleBuilder.heptoScale(fundamental)
     },
-    "Full (Pythagorean)" -> {
-      () => PythagScaleBuilder.fullScale(fundamental)
+    "Full (Even Temperment)" -> {
+      () => EvenTempScaleBuilder.fullScale(fundamental)
+    },
+    "Heptotonic (Even Temperment)" -> {
+      () => EvenTempScaleBuilder.heptoScale(fundamental)
+    },
+    "Full (Harmonic)" -> {
+      () => HarmonicScaleBuilder.fullScale(fundamental)
+    },
+    "Heptatonic (Harmonic)" -> {
+      () => HarmonicScaleBuilder.heptoScale(fundamental)
     }
   )
 
-  val buttons = scales.keys map (new RadioButton(_))
+  val buttons = scales.keys.toSeq.sortBy(_.toString) map (new RadioButton(_))
 
   val buttonGroup = new ButtonGroup(buttons.toSeq: _*)
 
@@ -64,13 +76,13 @@ object DemoShowScales extends SimpleSwingApplication {
 
   val scaleChoices = new BoxPanel(Orientation.Vertical) {
 
+    contents += new BoxPanel(Orientation.Vertical) {
+      contents ++= buttons
+    }
+
     contents += new FlowPanel {
       contents += new Label("Fundamental: ")
       contents += fundamentalTextField
-    }
-
-    contents += new BoxPanel(Orientation.Horizontal) {
-      contents ++= buttons
     }
   }
 

@@ -39,6 +39,6 @@ object HarmonicSeries {
         addVals(m, index + 1, num - 1)
       }
     }
-    addVals(new mutable.HashMap[Float, Interval], 0, 13).values.toIndexedSeq.sortBy(_.hz)
+    (addVals(new mutable.HashMap[Float, Interval], 0, 12).values.toIndexedSeq ++ Seq(s(0).octaveUp)).sortBy(_.hz)
   }
 }
