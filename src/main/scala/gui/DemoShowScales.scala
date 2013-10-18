@@ -2,7 +2,7 @@ package gui
 
 import scala.swing._
 import synth.scales.{PythagScaleBuilder, Scale}
-import scala.swing.event.ButtonClicked
+import scala.swing.event.{EditDone, ActionEvent, ButtonClicked}
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,7 +23,12 @@ object DemoShowScales extends SimpleSwingApplication {
     size = new Dimension(600, 400)
   }
 
-  def fundamental = 528f
+  val fundamentalTextField = new TextField("528", 5)
+  listenTo(fundamentalTextField)
+
+  def fundamental = try fundamentalTextField.text.toFloat catch {
+    case _: Throwable => 0f
+  }
 
   val scales = Map[String, () => Scale](
     "Heptatonic (Pythagorean)" -> {
@@ -36,22 +41,40 @@ object DemoShowScales extends SimpleSwingApplication {
 
   val buttons = scales.keys map (new RadioButton(_))
 
-  new ButtonGroup(buttons.toSeq: _*)
+  val buttonGroup = new ButtonGroup(buttons.toSeq: _*)
 
   buttons foreach (listenTo(_))
 
   reactions += {
     case ButtonClicked(button) => {
-      scaleDisplay.setName(button.text)
-      scaleDisplay.setScale(scales.get(button.text).get())
+      if (fundamental != 0f) {
+        scaleDisplay.setName(button.text)
+        scaleDisplay.setScale(scales.get(button.text).get())
+      }
     }
-    case _ =>
+    case EditDone(source: Component) => source match {
+      case `fundamentalTextField` => {
+        buttonGroup.selected.map(b => b.doClick())
+        fundamentalTextField.requestFocusInWindow()
+      }
+      case _ =>
+    }
+    case x =>
   }
 
-  val scaleChoices = new BoxPanel(Orientation.Horizontal) {
-    contents ++= buttons
+  val scaleChoices = new BoxPanel(Orientation.Vertical) {
+
+    contents += new FlowPanel {
+      contents += new Label("Fundamental: ")
+      contents += fundamentalTextField
+    }
+
+    contents += new BoxPanel(Orientation.Horizontal) {
+      contents ++= buttons
+    }
   }
 
   val scaleDisplay = new ScaleDisplay()
 
+  buttons.seq.head.doClick()
 }
