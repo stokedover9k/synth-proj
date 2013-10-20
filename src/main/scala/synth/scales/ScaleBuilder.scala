@@ -8,7 +8,7 @@ package synth.scales
  * To change this template use File | Settings | File Templates.
  */
 
-abstract class ScBuilder {
+abstract class ScaleBuilder {
 
-  def build(): TypedSc
+  def build(): TypedScale
 }

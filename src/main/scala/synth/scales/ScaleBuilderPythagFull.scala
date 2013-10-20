@@ -1,6 +1,6 @@
 package synth.scales
 
-import synth.{EvenTempSeries, PythagoreanSeries}
+import synth.{SeriesEvenTemp, SeriesPythagorean}
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,18 +10,18 @@ import synth.{EvenTempSeries, PythagoreanSeries}
  * To change this template use File | Settings | File Templates.
  */
 
-case class ScBuilderPythagFull(fundamental: Float)
-  extends ScBuilder {
+case class ScaleBuilderPythagFull(fundamental: Float)
+  extends ScaleBuilder {
 
-  lazy val series = PythagoreanSeries(fundamental)
+  lazy val series = SeriesPythagorean(fundamental)
 
   def allIntervals = (-1 until 12 map (series(_)) sortBy (_.hz)) :+ series(12).octaveUp
 
-  def build(): TypedSc = UniqueSc(allIntervals, ScBuilderPythagFull.allTypes, ScBuilderPythagFull.allNotes)
+  def build(): TypedScale = UniqueScale(allIntervals, ScaleBuilderPythagFull.allTypes, ScaleBuilderPythagFull.allNotes)
 }
 
 
-object ScBuilderPythagFull {
+object ScaleBuilderPythagFull {
 
   import IntervalType._
 

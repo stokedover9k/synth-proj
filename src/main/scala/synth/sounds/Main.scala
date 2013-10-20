@@ -1,4 +1,4 @@
-package synth
+package synth.sounds
 
 import javax.sound.sampled._
 import synth.sounds.{Sine, BufferedWaveOscillator, Oscillator}

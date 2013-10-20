@@ -39,7 +39,7 @@ class PythagoreanSeriesLivingSpec extends LivingSpec {
       livingSpecData(12)(fundCol) = "1"
       livingSpecData(13)(fundCol) = "1"
 
-      lazy val series = new PythagoreanSeries(fundamental)
+      lazy val series = new SeriesPythagorean(fundamental)
 
       lazy val allNotes = 1 to dataCols map { x => series(x - 2) }
 

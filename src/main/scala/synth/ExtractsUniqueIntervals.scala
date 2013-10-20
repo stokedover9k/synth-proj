@@ -1,6 +1,6 @@
 package synth
 
-import synth.NoteSeries.Interval
+import synth.Series.Interval
 import scala.collection.mutable
 
 /**
@@ -16,16 +16,16 @@ trait ExtractsUniqueIntervals {
   /*
    * Returns a sequence of unique intervals.
    */
-  def extract(n: Int): Iterable[NoteSeries.Interval]
+  def extract(n: Int): Iterable[Series.Interval]
 }
 
-case class IntervalSequenceBuilder(series: NoteSeries) extends ExtractsUniqueIntervals {
+case class IntervalSequenceBuilder(series: Series) extends ExtractsUniqueIntervals {
 
   /*
    * Returns a sequence of unique intervals.  These are the first n unique intervals in the series.
    */
   def extract(n: Int): Iterable[Interval] = {
-    val intervals = new mutable.HashMap[Float, NoteSeries.Interval]
+    val intervals = new mutable.HashMap[Float, Series.Interval]
     var i = 0
     while( intervals.size < n ) {
       val interval = series(i)

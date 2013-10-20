@@ -10,7 +10,7 @@ package gui
 
 import swing._
 import swing.event._
-import synth.{PythagoreanSeries, HarmonicSeries, NoteSeries}
+import synth.{SeriesPythagorean, SeriesHarmonic, Series}
 import java.awt.BorderLayout
 import scala.collection.mutable
 
@@ -27,7 +27,7 @@ object SeriesDemo extends SimpleSwingApplication {
   lazy val columnNames: Seq[String] =
     "degree|ratio|frequency|octave|factor|reduced ratio|reduced decimal|hz in octave".split("\\|")
 
-  def makeRow(note: NoteSeries.Interval) =
+  def makeRow(note: Series.Interval) =
     Array[Any](
       note.degree
       , note.generatingExpression
@@ -55,17 +55,17 @@ object SeriesDemo extends SimpleSwingApplication {
 
   val buttons = new BoxPanel(Orientation.Horizontal) {
     contents += new Button { text = "Harmonic"
-      lazy val series = HarmonicSeries(fundamental)
+      lazy val series = SeriesHarmonic(fundamental)
       lazy val rowData =
-        (0 to 32 map (series(_))).toArray[NoteSeries.Interval] map (makeRow(_))
+        (0 to 32 map (series(_))).toArray[Series.Interval] map (makeRow(_))
       lazy val table = new swing.Table(rowData, columnNames)
       reactions += { case ButtonClicked(_) => displayData(table) }
     }
 
     contents += new Button { text = "Pythagorean"
-      lazy val series = PythagoreanSeries(fundamental)
+      lazy val series = SeriesPythagorean(fundamental)
       lazy val rowData =
-        (-1 to 7 map (series(_))).toArray[NoteSeries.Interval] map (makeRow(_))
+        (-1 to 7 map (series(_))).toArray[Series.Interval] map (makeRow(_))
       lazy val table = new swing.Table(rowData, columnNames)
       reactions += { case ButtonClicked(_) => displayData(table) }
     }

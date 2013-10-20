@@ -1,6 +1,6 @@
 package synth.oldscales
 
-import synth.NoteSeries
+import synth.Series
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,7 +12,7 @@ import synth.NoteSeries
 
 abstract class Scale {
   def size: Int
-  def apply(index: Int): NoteSeries.Interval
+  def apply(index: Int): Series.Interval
 
   override def toString = (0 until size).map( i => apply(i) ).addString(new StringBuilder, "[", " ", "]").toString
 }

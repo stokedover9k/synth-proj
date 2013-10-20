@@ -1,7 +1,7 @@
 package synth.oldscales
 
-import synth.NoteSeries.Interval
-import synth.NoteSeries
+import synth.Series.Interval
+import synth.Series
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,7 +46,7 @@ object Scale7 {
   }
 }
 
-abstract class Series2Scale7[S <: NoteSeries] {
+abstract class Series2Scale7[S <: Series] {
 
   /*
    * Returns the first 7 notes of the scale.  Assumed to be sorted by frequency.

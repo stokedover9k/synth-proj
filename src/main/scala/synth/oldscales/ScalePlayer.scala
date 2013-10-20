@@ -1,7 +1,7 @@
 package synth.oldscales
 
-import synth.sounds.{Sine, BufferedWaveOscillator, Oscillator}
-import synth.{PythagoreanSeries, HarmonicSeries, Main}
+import synth.sounds.{Main, Sine, BufferedWaveOscillator, Oscillator}
+import synth.{SeriesPythagorean, SeriesHarmonic}
 
 /**
  * Created with IntelliJ IDEA.
@@ -40,12 +40,12 @@ object ScalePlayer {
 
       args(0) match {
         case "h" => {
-          object ScaleBuilder extends Series2Scale7[HarmonicSeries] with HarmonicSeries.Extracts7Notes
-          f: Float => ScaleBuilder buildScale7( HarmonicSeries(f) )
+          object ScaleBuilder extends Series2Scale7[SeriesHarmonic] with SeriesHarmonic.Extracts7Notes
+          f: Float => ScaleBuilder buildScale7( SeriesHarmonic(f) )
         }
         case "p" => {
-          object ScaleBuilder extends Series2Scale7[PythagoreanSeries] with PythagoreanSeries.Extracts7Notes
-          f: Float => ScaleBuilder buildScale7( PythagoreanSeries(f) )
+          object ScaleBuilder extends Series2Scale7[SeriesPythagorean] with SeriesPythagorean.Extracts7Notes
+          f: Float => ScaleBuilder buildScale7( SeriesPythagorean(f) )
         }
         case  s  => {
           System.out.println("[Error]: unknown series type (%s)".format(s))

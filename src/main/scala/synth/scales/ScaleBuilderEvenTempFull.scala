@@ -1,6 +1,6 @@
 package synth.scales
 
-import synth.EvenTempSeries
+import synth.SeriesEvenTemp
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,18 +10,18 @@ import synth.EvenTempSeries
  * To change this template use File | Settings | File Templates.
  */
 
-case class ScBuilderEvenTempFull(fundamental: Float)
-  extends ScBuilder {
+case class ScaleBuilderEvenTempFull(fundamental: Float)
+  extends ScaleBuilder {
 
-  lazy val series = EvenTempSeries(fundamental)
+  lazy val series = SeriesEvenTemp(fundamental)
 
   def allIntervals = (0 to 11 map (series(_))) :+ series(12).octaveUp
 
-  def build(): TypedSc = OctaveWrappedSc(allIntervals, ScBuilderEvenTempFull.allTypes, ScBuilderEvenTempFull.allNotes)
+  def build(): TypedScale = OctaveWrappedScale(allIntervals, ScaleBuilderEvenTempFull.allTypes, ScaleBuilderEvenTempFull.allNotes)
 }
 
 
-object ScBuilderEvenTempFull {
+object ScaleBuilderEvenTempFull {
 
   lazy val allTypes = IntervalType.getAll :+ IntervalType.First
 

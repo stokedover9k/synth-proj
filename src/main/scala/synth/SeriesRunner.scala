@@ -27,10 +27,10 @@ object SeriesRunner {
       }
     }
 
-    val seriesAndRange: (NoteSeries, Range) = try {
+    val seriesAndRange: (Series, Range) = try {
       args(0) match {
-        case "h" => (HarmonicSeries(fundamental), 0 to 32)
-        case "p" => (PythagoreanSeries(fundamental), -1 to 12)
+        case "h" => (SeriesHarmonic(fundamental), 0 to 32)
+        case "p" => (SeriesPythagorean(fundamental), -1 to 12)
         case  s  => {
           System.out.println("[Error]: unknown series type (%s)".format(s))
           sys.exit(2)

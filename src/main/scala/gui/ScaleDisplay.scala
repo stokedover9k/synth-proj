@@ -1,7 +1,7 @@
 package gui
 
 import scala.Array
-import synth.scales.{TypedSc}
+import synth.scales.{TypedScale}
 import scala.swing.{ScrollPane, Label, BorderPanel}
 
 /**
@@ -12,7 +12,7 @@ import scala.swing.{ScrollPane, Label, BorderPanel}
  * To change this template use File | Settings | File Templates.
  */
 
-class ScaleDisplay(private var scale: TypedSc = null,
+class ScaleDisplay(private var scale: TypedScale = null,
                    override var name: String = "")
   extends BorderPanel {
 
@@ -22,7 +22,7 @@ class ScaleDisplay(private var scale: TypedSc = null,
     nameLabel.repaint()
   }
 
-  def setScale(s: TypedSc): Unit = {
+  def setScale(s: TypedScale): Unit = {
     scale = s
     scalePane.contents = getContents
     scalePane.repaint

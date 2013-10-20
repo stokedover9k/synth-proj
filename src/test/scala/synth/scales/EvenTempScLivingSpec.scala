@@ -2,7 +2,7 @@ package synth.scales
 
 import util.LivingSpec
 import org.specs2.specification.Scope
-import synth.EvenTempSeries
+import synth.SeriesEvenTemp
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,9 +27,9 @@ class EvenTempScLivingSpec extends LivingSpec {
 
     trait Fixture extends Scope {
 
-      lazy val series = new EvenTempSeries(fundamental)
+      lazy val series = new SeriesEvenTemp(fundamental)
 
-      lazy val scale = ScBuilderEvenTempFull(fundamental).build()
+      lazy val scale = ScaleBuilderEvenTempFull(fundamental).build()
 
       lazy val allNotes = 0 to 12 map ( n => "%.2f".format( scale(n).hz ).toFloat )
     }

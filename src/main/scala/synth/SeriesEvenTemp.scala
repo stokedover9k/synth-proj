@@ -10,23 +10,23 @@ import util.expr.{Fraction, Num, Expr}
  * To change this template use File | Settings | File Templates.
  */
 
-case class EvenTempSeries(fundamental: Float) extends NoteSeries {
+case class SeriesEvenTemp(fundamental: Float) extends Series {
 
-  def apply(degree: Int) = EvenTempSeries.Interval(degree, fundamental)
+  def apply(degree: Int) = SeriesEvenTemp.Interval(degree, fundamental)
 
 }
 
 
-object EvenTempSeries {
+object SeriesEvenTemp {
 
   case class Interval(degree: Int, fundamental: Float, override val octave: Int = 0)
-    extends NoteSeries.Interval {
+    extends Series.Interval {
 
     override def generatingExpression: Expr = Num(2).pow(Fraction(Num(degree), Num(12)))
 
     override def octaveUp: Interval = Interval(degree, fundamental, octave + 1)
 
-    override def octaveDown: NoteSeries.Interval = Interval(degree, fundamental, octave - 1)
+    override def octaveDown: Series.Interval = Interval(degree, fundamental, octave - 1)
   }
 
 }

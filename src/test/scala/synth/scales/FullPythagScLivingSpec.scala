@@ -38,7 +38,7 @@ class FullPythagScLivingSpec extends LivingSpec {
       livingSpecData(31)(8) = "F#" // switch flat and sharp
       livingSpecData(31)(9) = "Gb"
 
-      lazy val scale = ScBuilderPythagFull(fundamental).build()
+      lazy val scale = ScaleBuilderPythagFull(fundamental).build()
 
       lazy val allIntervals = 0 until dataCols map {
         scale(_)

@@ -31,15 +31,15 @@ object DemoShowScales extends SimpleSwingApplication {
     case _: Throwable => 0f
   }
 
-  val scales = Map[String, () => TypedSc](
+  val scales = Map[String, () => TypedScale](
     "Full (Pythagorean)" -> {
-      () => ScBuilderPythagFull(fundamental).build
+      () => ScaleBuilderPythagFull(fundamental).build
     },
     "Heptatonic (Pythagorean)" -> {
-      () => ScBuilderPythagHepto(fundamental).build
+      () => ScaleBuilderPythagHepto(fundamental).build
     },
     "Full (Even Temperment)" -> {
-      () => ScBuilderEvenTempFull(fundamental).build
+      () => ScaleBuilderEvenTempFull(fundamental).build
     }
 //    "Heptotonic (Even Temperment)" -> {
 //      () => EvenTempScaleBuilder.heptoScale(fundamental)

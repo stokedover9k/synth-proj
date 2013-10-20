@@ -10,7 +10,7 @@ import util.expr.{Fraction, WholeNum, Expr}
 * To change this template use File | Settings | File Templates.
 */
 
-abstract class NoteSeries {
+abstract class Series {
 
   /*
    * The series' fundamental frequency.
@@ -20,10 +20,10 @@ abstract class NoteSeries {
   /*
    * Returns the interval of the specified degree within the series.
    */
-  def apply(degree: Int): NoteSeries.Interval
+  def apply(degree: Int): Series.Interval
 }
 
-object NoteSeries {
+object Series {
 
   abstract class Interval {
 

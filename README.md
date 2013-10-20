@@ -85,4 +85,4 @@ All the content discussed in this section is in the *src/main/scala* directory.
 
 The *synth* directory contains the music related classes and the *util* directory contains utility classes and libraries implemented for use in synth.
 
-*util/expr* contains a library for mathematical expressions primarily implemented to represent the frequency-generating functions for the note series (see the abstract class Interval in *synth/NoteSeries.scala*).
+*util/expr* contains a library for mathematical expressions primarily implemented to represent the frequency-generating functions for the note series (see the abstract class Interval in *synth/Series.scala*).

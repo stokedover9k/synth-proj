@@ -24,10 +24,10 @@ class ModeScLivingSpec extends LivingSpec {
 
     lazy val fundamental: Float = livingSpecData(dataSkipRows)(dataSkipCols).toFloat
 
-    lazy val scale: TypedSc with WesternModes = ScBuilderPythagHepto(fundamental).build()
+    lazy val scale: TypedScale with WesternModes = ScaleBuilderPythagHepto(fundamental).build()
 
-    case class matchExpectedAt(offset: Int) extends Matcher[Sc] {
-      def apply[S <: Sc](s: Expectable[S]) = {
+    case class matchExpectedAt(offset: Int) extends Matcher[Scale] {
+      def apply[S <: Scale](s: Expectable[S]) = {
 
         def to2decimalPlaces: Float => Float =
           f => Math.round(f * 100).toFloat / 100

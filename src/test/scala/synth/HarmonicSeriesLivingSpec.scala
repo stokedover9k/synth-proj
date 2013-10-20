@@ -18,7 +18,7 @@ class HarmonicSeriesLivingSpec extends LivingSpec {
 
     trait Fixture extends Scope {
 
-      lazy val series = new HarmonicSeries(fundamental)
+      lazy val series = new SeriesHarmonic(fundamental)
 
       lazy val allNotes = 0 until dataRows map { series(_) }
     }
