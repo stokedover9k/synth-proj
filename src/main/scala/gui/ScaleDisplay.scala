@@ -1,7 +1,7 @@
 package gui
 
 import scala.Array
-import synth.scales.{Note, Scale}
+import synth.scales.{TypedSc}
 import scala.swing.{ScrollPane, Label, BorderPanel}
 
 /**
@@ -12,7 +12,7 @@ import scala.swing.{ScrollPane, Label, BorderPanel}
  * To change this template use File | Settings | File Templates.
  */
 
-class ScaleDisplay(private var scale: Scale = null,
+class ScaleDisplay(private var scale: TypedSc = null,
                    override var name: String = "")
   extends BorderPanel {
 
@@ -22,7 +22,7 @@ class ScaleDisplay(private var scale: Scale = null,
     nameLabel.repaint()
   }
 
-  def setScale(s: Scale): Unit = {
+  def setScale(s: TypedSc): Unit = {
     scale = s
     scalePane.contents = getContents
     scalePane.repaint
@@ -37,17 +37,16 @@ class ScaleDisplay(private var scale: Scale = null,
   add(scalePane, BorderPanel.Position.Center)
 
   private def getDataRows: Array[Array[Any]] = {
-    val notes = if (scale == null) Array[Note]() else scale.notes.toArray
-    notes map {
-      _ match {
-        case Note(note, interval) => Array[Any](
-          note,
-          "%.2f".format(interval.hz).toFloat,
-          interval.degree,
-          interval.hzFactor,
-          interval.hzFactor.toFloat
-        )
-      }
+    val indices = if (scale == null) 0 until 0 else 0 until scale.size
+
+    indices.toArray map { i =>
+      Array[Any](
+        scale.getName(i)
+        , "%.2f".format(scale(i).hz).toFloat
+        , scale(i).degree
+        , scale(i).hzFactor
+        , scale(i).hzFactor.toFloat
+      )
     }
   }
 

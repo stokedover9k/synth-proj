@@ -1,8 +1,9 @@
 package gui
 
 import scala.swing._
-import synth.scales.{HarmonicScaleBuilder, EvenTempScaleBuilder, PythagScaleBuilder, Scale}
-import scala.swing.event.{EditDone, ActionEvent, ButtonClicked}
+import synth.scales._
+import scala.swing.event.ButtonClicked
+import scala.swing.event.EditDone
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,25 +31,25 @@ object DemoShowScales extends SimpleSwingApplication {
     case _: Throwable => 0f
   }
 
-  val scales = Map[String, () => Scale](
+  val scales = Map[String, () => TypedSc](
     "Full (Pythagorean)" -> {
-      () => PythagScaleBuilder.fullScale(fundamental)
+      () => ScBuilderPythagFull(fundamental).build
     },
     "Heptatonic (Pythagorean)" -> {
-      () => PythagScaleBuilder.heptoScale(fundamental)
+      () => ScBuilderPythagHepto(fundamental).build
     },
     "Full (Even Temperment)" -> {
-      () => EvenTempScaleBuilder.fullScale(fundamental)
-    },
-    "Heptotonic (Even Temperment)" -> {
-      () => EvenTempScaleBuilder.heptoScale(fundamental)
-    },
-    "Full (Harmonic)" -> {
-      () => HarmonicScaleBuilder.fullScale(fundamental)
-    },
-    "Heptatonic (Harmonic)" -> {
-      () => HarmonicScaleBuilder.heptoScale(fundamental)
+      () => ScBuilderEvenTempFull(fundamental).build
     }
+//    "Heptotonic (Even Temperment)" -> {
+//      () => EvenTempScaleBuilder.heptoScale(fundamental)
+//    }
+//    "Full (Harmonic)" -> {
+//      () => HarmonicScaleBuilder.fullScale(fundamental)
+//    },
+//    "Heptatonic (Harmonic)" -> {
+//      () => HarmonicScaleBuilder.heptoScale(fundamental)
+//    }
   )
 
   val buttons = scales.keys.toSeq.sortBy(_.toString) map (new RadioButton(_))
