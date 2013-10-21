@@ -48,8 +48,6 @@ abstract class TypedScale extends Scale {
 
   def apply(name: String): Interval =
     apply(allNames.indexOf(name))
-
-
 }
 
 

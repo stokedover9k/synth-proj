@@ -91,8 +91,21 @@ class DodecophonicPythagScLivingSpec extends LivingSpec {
     }
 
     "compute the right note names" in new Fixture {
-      val noteNames = 0 until scale.size map (scale.getName(_))
+      val noteNames = 0 until scale.size map (scale.getName)
       mustEqualRow(noteNames, 13)
+    }
+
+    "compute the right interval types" in new Fixture {
+
+      // spec has "b5 (b)" and "b5 (#)", but for generality we support "b5" for both
+      livingSpecData(35)(8) = "b5"
+      livingSpecData(35)(9) = "b5"
+
+      // spec has "2" where for major second, so we fix this
+      livingSpecData(35)(4) = "M2"
+
+      val types = 0 until scale.size map (scale.getType)
+      mustEqualRow(types, 14)
     }
   }
 }
