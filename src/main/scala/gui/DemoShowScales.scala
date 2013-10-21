@@ -40,6 +40,9 @@ object DemoShowScales extends SimpleSwingApplication {
     },
     "Full (Even Temperment)" -> {
       () => ScaleBuilderEvenTempFull(fundamental).build
+    },
+    "Full (Dodecophonic)" -> {
+      () => ScaleBuilderDodecophonicFull(fundamental).build
     }
 //    "Heptotonic (Even Temperment)" -> {
 //      () => EvenTempScaleBuilder.heptoScale(fundamental)

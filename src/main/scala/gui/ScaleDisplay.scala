@@ -2,7 +2,7 @@ package gui
 
 import scala.Array
 import synth.scales.{TypedScale}
-import scala.swing.{ScrollPane, Label, BorderPanel}
+import scala.swing.{Font, ScrollPane, Label, BorderPanel}
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,7 +41,7 @@ class ScaleDisplay(private var scale: TypedScale = null,
 
     indices.toArray map { i =>
       Array[Any](
-        scale.getName(i)
+        "%2s : %-2s".format(scale.getType(i), scale.getName(i))
         , "%.2f".format(scale(i).hz).toFloat
         , scale(i).degree
         , scale(i).hzFactor
@@ -52,6 +52,8 @@ class ScaleDisplay(private var scale: TypedScale = null,
 
   private def getContents: swing.Table = {
     val headings = Seq("note", "hz", "degree", "factor expr", "factor")
-    new swing.Table(getDataRows, headings)
+    new swing.Table(getDataRows, headings) {
+      font = new Font("Monospaced", 0, 14)
+    }
   }
 }
