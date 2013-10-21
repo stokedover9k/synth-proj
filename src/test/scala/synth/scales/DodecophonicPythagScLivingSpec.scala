@@ -12,14 +12,6 @@ import util.LivingSpec
 import org.specs2.specification.Scope
 import synth.SeriesEvenTemp
 
-/**
- * Created with IntelliJ IDEA.
- * User: stoked
- * Date: 10/20/13
- * Time: 2:37 PM
- * To change this template use File | Settings | File Templates.
- */
-
 class DodecophonicPythagScLivingSpec extends LivingSpec {
 
   def livingSpecFilename: String = "src/test/resources/pythag_sheet_phase5.csv"
@@ -31,7 +23,7 @@ class DodecophonicPythagScLivingSpec extends LivingSpec {
 
   lazy val fundamental: Float = livingSpecData(dataSkipRows + 11)(dataSkipCols).toFloat
 
-  "Even Temperment Scale" should {
+  "Dodecophonic Scale" should {
 
     trait Fixture extends Scope {
 
@@ -45,8 +37,6 @@ class DodecophonicPythagScLivingSpec extends LivingSpec {
       livingSpecData(28)(fundCol) = "1" // octave adjustment
       livingSpecData(31)(fundCol) = "1"
       // adjusted factor
-
-      lazy val series = new SeriesEvenTemp(fundamental)
 
       lazy val scale = ScaleBuilderDodecophonicFull(fundamental).build()
 

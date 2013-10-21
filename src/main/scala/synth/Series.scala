@@ -88,5 +88,10 @@ object Series {
      * Distance between this and another interval.
      */
     def distance(other: Interval): Expr = hzFactor div other.hzFactor
+
+    /*
+     * Compute cents based on the even temperment scale.
+     */
+    def cents: Float = 1200f * (Math.log(hzFactor.toFloat) / Math.log(2)).toFloat
   }
 }

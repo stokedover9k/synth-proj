@@ -1,0 +1,48 @@
+,,,,,,,,,,,,,,,,,
+,"Pythag
+(Natural) 
+Degree",Even Tempered,,Base Frequency: 528hz,,,,,"Pythag
+(Natural) 
+Degree",Harmonic Series,,,,,,,
+,, Frequency,CENTS,Type Name,TYPE  ,aka,"
+LETTER ",,,Freq,CENTS,"Type Name
+(closest)",TYPE,"Ratio
+(in octave)","LETTER
+(closest)",Comment,Series
+,1,528,0,Unison,1,Root,C,,1,528,0,Root,1,1/1,C,,1
+,,559,100,Minor Second,m2,Semi-tone,C#/Db,,8,528,1200,Octave,,1/1,C,,2
+,2,593,200,Major Second,M2,Whole tone,D,,5,792,702,Fifth,5,3/2,G,natural chromatic,3
+,,628,300,Minor Third,m3,,D#/Eb,,,528,0,Octave,,1/1,C,,4
+,3,665,400,Major Third,M3,,E,,,660,386,Major third,,5/4,E,natural chromatic,5
+,4,705,500,Perfect Fourth,4,,F,,,792,702,Fifth,,3/2,G,,6
+,,747,600,Diminished Fifth,b5,Tritone,F#/Gb,,,924,969,Minor seventh,,7/4,Bb,,7
+,5,791,700,Perfect Fifth,5,,G,,,528,0,Octave,,1/1,C,,8
+,,838,800,Minor Sixth,m6,,G#/Ab,,,594,204,Major second,,9/8,D,natural chromatic,9
+,6,888,900,Major Sixth,M6,,A,,,660,386,Major third,,5/4,E,,10
+,,941,1000,Minor Seventh,m7,,A#/Bb,,,726,551,Diminished 5th ,,11/8,F#b,,11
+,7,997,1100,Major Seventh,M7,,B,,,792,702,Fifth,,3/2,G,,12
+,8,1056,1200,Octave,1,,C,,,858,841,Minor sixth,,13/8,Ab#,,13
+,,,,,,,,,,924,969,Minor seventh,,7/4,Bb,,14
+,,,,,,,,,,990,1088,Major seventh,,15/8,B,,15
+,,,,,,,,,,528,0,Octave,,1/1,C,,16
+,,,,,,,,,,561,105,Minor second,,17/16,C#-,6.8c  b of 16/15,17
+,,,,,,,,,2,594,204,Major second,M2,9/8,D,,18
+,,,,,,,,,,627,298,Minor third,,19/16,Eb-,pythag C-A (32/27) is 294.1c,19
+,,,,,,,,,3,660,386,Major third,M3,5/4,E,22c # of pythag 3rd,20
+,Pythag,,,,,,,,4,693,471,Fourth,4,21/16,F-,27.3c b of pythag 4/3,21
+,(Natural),,,,,,,,,726,551,Diminished 5th,,11/8,F#b,,22
+,Degree,Pythagorean  ,,,,,,,,759,628,Diminished 5th,,23/16,F#+,,23
+,, Frequency,CENTS,,TYPE,Ratio (in octave),LETTER,,,792,702,Fifth,,3/2,G,,24
+,1,528,0,First,1,1/1,C,,,825,773,Minor sixth,,25/16,Ab-,,25
+,2,594,204,Second,M2,9/8,D,,,858,841,Major sixth,,13/8,Ab#,,26
+,3,668,408,Third,M3,81/64,E ,,6,891,906,Major Sixth,M6,27/16,A+,"21.5c  # of 5/3, but = pythag 6th",27
+,4,704,498,Fourth,4,4/3,F,,,924,969,Minor seventh,,7/4,Bb,27.3c  b of 16/9 ,28
+,5,792,702,Fifth,5,3/2,G ,,,957,1030,Minor seventh ,,29/16,Bb+,,29
+,6,891,906,Sixth,M6,27/16,A,,7,990,1088,Major seventh,M7,15/8,B,"natural chromatic, 21.5c b of pythag 7",30
+,7,1002,1110,Seventh,M7,243/128,B,,,1023,1145,Major seventh,,31/16,B#,,31
+,8,1056,1200,Octave,1,2/1,C,,,528,0,Octave,,1/1,C,,32
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,Cents diff between pythag third and closest harmonic?,,,
+,,,,,,,,,,,,,,1.25,1.265625,0.02,
+,,,,,,,,,,,,,,386,408,21.5,
