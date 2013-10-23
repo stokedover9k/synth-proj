@@ -43,16 +43,10 @@ object DemoShowScales extends SimpleSwingApplication {
     },
     "Full (Dodecophonic)" -> {
       () => ScaleBuilderDodecophonicFull(fundamental).build
+    },
+    "Long (Harmonic)" -> {
+      () => ScaleBuilderHarmonicLong(fundamental, 32).build
     }
-//    "Heptotonic (Even Temperment)" -> {
-//      () => EvenTempScaleBuilder.heptoScale(fundamental)
-//    }
-//    "Full (Harmonic)" -> {
-//      () => HarmonicScaleBuilder.fullScale(fundamental)
-//    },
-//    "Heptatonic (Harmonic)" -> {
-//      () => HarmonicScaleBuilder.heptoScale(fundamental)
-//    }
   )
 
   val buttons = scales.keys.toSeq.sortBy(_.toString) map (new RadioButton(_))

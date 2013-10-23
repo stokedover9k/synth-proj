@@ -37,6 +37,13 @@ abstract class LivingSpec extends Specification {
     }
   }
 
+  def seqsMustEqualUnlessEmpty[T](col1: Seq[T], col2: Seq[String]): Unit = {
+    col1.size must_== col2.size
+    col1 zip col2 foreach {
+      case (a, b) => (b must_== "") or (a must_== b) or failure("found %s\nexpected %s".format(col1.toString, col2.toString))
+    }
+  }
+
   def getDataCol(colIndex: Int): Seq[String] = {
     livingSpecData drop dataSkipRows take dataRows map {
       row => row(colIndex + dataSkipCols)
@@ -49,6 +56,12 @@ abstract class LivingSpec extends Specification {
 
   def mustEqualCol[T](col: Seq[T], colNum: Int): Unit = {
     seqsMustEqual(col map {
+      _.toString
+    }, getDataCol(colNum))
+  }
+
+  def mustEqualColUnlessEmpty[T](col: Seq[T], colNum: Int): Unit = {
+    seqsMustEqualUnlessEmpty(col map {
       _.toString
     }, getDataCol(colNum))
   }

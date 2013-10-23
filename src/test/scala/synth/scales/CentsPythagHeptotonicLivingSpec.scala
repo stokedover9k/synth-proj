@@ -20,7 +20,7 @@ class CentsPythagHeptotonicLivingSpec extends LivingSpec {
   val dataRows: Int = 8
   val dataCols: Int = 7
 
-    lazy val fundamental: Float = livingSpecData(dataSkipRows)(dataSkipCols+1).toFloat
+  lazy val fundamental: Float = livingSpecData(dataSkipRows)(dataSkipCols + 1).toFloat
 
   "Pythagorean Scale" should {
 

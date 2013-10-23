@@ -71,8 +71,8 @@ trait WesternModes extends HasModes {
 
 
 class OctaveWrappedScale protected(override val intervals: immutable.IndexedSeq[Interval],
-                                override val allTypes: immutable.IndexedSeq[IntervalType],
-                                override val allNames: immutable.IndexedSeq[String])
+                                   override val allTypes: immutable.IndexedSeq[IntervalType],
+                                   override val allNames: immutable.IndexedSeq[String])
   extends TypedScale with HasModes
 
 
@@ -91,8 +91,8 @@ object OctaveWrappedScale {
 
 
 class UniqueScale protected(override val intervals: immutable.IndexedSeq[Interval],
-                         override val allTypes: immutable.IndexedSeq[IntervalType],
-                         override val allNames: immutable.IndexedSeq[String])
+                            override val allTypes: immutable.IndexedSeq[IntervalType],
+                            override val allNames: immutable.IndexedSeq[String])
   extends TypedScale with HasModes
 
 
