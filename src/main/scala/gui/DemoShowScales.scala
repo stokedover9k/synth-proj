@@ -20,6 +20,7 @@ object DemoShowScales extends SimpleSwingApplication {
     contents = new BorderPanel {
       add(scaleChoices, BorderPanel.Position.North)
       add(scaleDisplay, BorderPanel.Position.Center)
+      add(scalePlayer, BorderPanel.Position.South)
     }
     size = new Dimension(600, 600)
   }
@@ -60,6 +61,7 @@ object DemoShowScales extends SimpleSwingApplication {
       if (fundamental != 0f) {
         scaleDisplay.setName(button.text)
         scaleDisplay.setScale(scales.get(button.text).get())
+        scalePlayer.setScale(scales.get(button.text).get())
       }
     }
     case EditDone(source: Component) => source match {
@@ -85,6 +87,8 @@ object DemoShowScales extends SimpleSwingApplication {
   }
 
   val scaleDisplay = new ScaleDisplay()
+
+  val scalePlayer = new ScalePlayer()
 
   buttons.seq.head.doClick()
 }
