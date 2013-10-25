@@ -34,9 +34,21 @@ The following are some of the Living Specs (in *src/test/scala/synth/*):
 
 	> Ensures that the Pythagorean series modes are computed correctly.
 
-+ scales/PythagoreanFullScaleLivingSpec.scala
++ scales/FullPythagScLivingSpec.scala
 
 	> Ensures that the full scale (14 notes) are created correctly using the Pythagorean series.
+
++ DodecophonicPythagScLivingSpec.scala
+
+	> Ensures that the Dodecophonic scales is computed correctly.
+
++ CentsHarmonicLivingSpec.scala
+
+	> Ensures that the Harmonic series shows the note names based on the closest intervals of the Pythagorean series.
+
++ CentsPythagHeptotonicLivingSpec.scala
+
+	> Ensures that the Pythagorean series displays correct cents values.
 
 Running the Specifications
 --------------------------
@@ -69,6 +81,10 @@ Here are some of the demos:
 +	synth.ScalePlayer
 
 	> Plays scales first as a mode of the original scale and then as a scale reconstructed from the mode's first frequency.
+
++	gui.DemoShowScales
+
+	> A GUI app that shows and plays several scales.
 
 Run them with no arguments to see the usage message.
 
