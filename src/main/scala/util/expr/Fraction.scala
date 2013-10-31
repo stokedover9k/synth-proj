@@ -8,7 +8,7 @@ package util.expr
  * To change this template use File | Settings | File Templates.
  */
 
-class Fraction(private val num: Int, private val denom: Int) extends BinOp with LeftAssoc {
+class Fraction private(val num: Int, val denom: Int) extends BinOp with LeftAssoc {
 
   def leftOp: Expr = WholeNum(num)
 
