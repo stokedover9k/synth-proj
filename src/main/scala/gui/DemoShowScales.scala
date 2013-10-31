@@ -47,6 +47,9 @@ object DemoShowScales extends SimpleSwingApplication {
     },
     "Long (Harmonic)" -> {
       () => ScaleBuilderHarmonicLong(fundamental, 32).build
+    },
+    "Chromatic (Ptolemy)" -> {
+      () => ScaleBuilderPtolemyChromatic(fundamental).build
     }
   )
 
