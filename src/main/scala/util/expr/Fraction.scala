@@ -39,7 +39,7 @@ class Fraction(private val num: Int, private val denom: Int) extends BinOp with 
 
   override def mult(o: Expr): Expr = o match {
     case WholeNum(n: Int) => mult(n)
-    case f: Fraction => new Fraction(num * f.num, denom * f.denom)
+    case f: Fraction => Fraction(num * f.num, denom * f.denom)
     case _ => super.mult(o)
   }
 
