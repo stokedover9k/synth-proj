@@ -38,15 +38,19 @@ The following are some of the Living Specs (in *src/test/scala/synth/*):
 
 	> Ensures that the full scale (14 notes) are created correctly using the Pythagorean series.
 
-+ DodecophonicPythagScLivingSpec.scala
++ scales/PtolemyScLivingSpec.scala
+
+	> Ensures that the Ptolemy scale interval adjustments are computed correctly.
+
++ scales/DodecophonicPythagScLivingSpec.scala
 
 	> Ensures that the Dodecophonic scales is computed correctly.
 
-+ CentsHarmonicLivingSpec.scala
++ scales/CentsHarmonicLivingSpec.scala
 
 	> Ensures that the Harmonic series shows the note names based on the closest intervals of the Pythagorean series.
 
-+ CentsPythagHeptotonicLivingSpec.scala
++ scales/CentsPythagHeptotonicLivingSpec.scala
 
 	> Ensures that the Pythagorean series displays correct cents values.
 
