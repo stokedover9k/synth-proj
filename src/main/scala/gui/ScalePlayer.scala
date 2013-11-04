@@ -18,7 +18,7 @@ import javax.sound.sampled.{AudioSystem, AudioFormat, DataLine, Clip}
 class PlayerLabel extends Label {
   text = "Stopped"
 
-  val line = synth.sounds.Main.getLine
+  val line = synth.sounds.Main.getLineM
 
   val components =
     Seq(

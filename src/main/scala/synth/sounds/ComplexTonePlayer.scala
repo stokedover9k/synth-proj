@@ -18,7 +18,7 @@ object ComplexTonePlayer {
 
   def main(args: Array[String]): Unit = {
 
-    val line = Main.getLine
+    val line = Main.getLineM
 
     val components =
       Seq(

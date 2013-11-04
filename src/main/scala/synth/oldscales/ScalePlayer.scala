@@ -81,7 +81,7 @@ object ScalePlayer {
 
     val rebuiltScale: Scale7 = scaleBuilder(modeScale(0).hz)
 
-    val line = Main.getLine
+    val line = Main.getLineM
     var oscillator: Oscillator = BufferedWaveOscillator(1024, Sine, SAMPLE_RATE, 0)
 
     val buffersPerSecond = 10

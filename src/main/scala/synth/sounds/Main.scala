@@ -13,14 +13,15 @@ object Main {
 
   val SAMPLE_RATE: Float = 44100
 
-  def getLine: SourceDataLine = {
-    val af: AudioFormat = new AudioFormat( SAMPLE_RATE, 8, 1, true, false )
-    var sdl: SourceDataLine = AudioSystem.getSourceDataLine( af )
-    sdl = AudioSystem.getSourceDataLine( af )
-    sdl.open( af )
-    sdl.start()
-    sdl
-  }
+  def getLineM: SourceDataLine = getLine
+//  {
+//    val af: AudioFormat = new AudioFormat( SAMPLE_RATE, 8, 1, true, false )
+//    var sdl: SourceDataLine = AudioSystem.getSourceDataLine( af )
+//    sdl = AudioSystem.getSourceDataLine( af )
+//    sdl.open( af )
+//    sdl.start()
+//    sdl
+//  }
 
   def main(args: Array[String]) = {
 
@@ -28,7 +29,7 @@ object Main {
     val samples = new Array[Float](2048)
     val bufferTimeLength = samples.size / SAMPLE_RATE
 
-    val line = getLine
+    val line = getLineM
 
     val repeatBuffers = (3/bufferTimeLength).toInt
     println("repeating buffer " + repeatBuffers + " times")
