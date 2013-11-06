@@ -22,11 +22,8 @@ class ClipCollection protected(private val clips: Seq[ClipCollection.Clip] = Seq
 
   def addClip(bytes: Array[Byte]): ClipCollection = addClip(bytes, currentOffset)
 
-  def ++(otherCC: ClipCollection): ClipCollection = {
-    val c = otherCC.clips.foldLeft(this)((cc, clip) => cc.addClip(clip.bytes, clip.begin))
-    println(c.clips.size)
-    c
-  }
+  def ++(otherCC: ClipCollection): ClipCollection =
+    otherCC.clips.foldLeft(this)((cc, clip) => cc.addClip(clip.bytes, clip.begin))
 
   protected def getSample(offset: Int): Byte = {
     clips.foldLeft(0)((sum, clip) => {
