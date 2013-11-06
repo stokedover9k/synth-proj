@@ -51,11 +51,13 @@ class Fraction private(val num: Int, val denom: Int) extends BinOp with LeftAsso
 
   override def plus(o: Expr): Expr = o match {
     case WholeNum(n: Int) => plus(n)
+    case f: Fraction => Fraction(num * f.denom + denom * f.num, denom * f.denom)
     case _ => super.plus(o)
   }
 
   override def minus(o: Expr): Expr = o match {
     case WholeNum(n: Int) => minus(n)
+    case f: Fraction => Fraction(num * f.denom - denom * f.num, denom * f.denom)
     case _ => super.minus(o)
   }
 
@@ -78,4 +80,8 @@ object Fraction {
   }
 
   def apply(num: WholeNum, denom: WholeNum): Fraction = apply(num.toInt, denom.toInt)
+
+  def improper(num: Int, denom: Int): Fraction = new Fraction(num, denom)
+
+  def improper(num: WholeNum, denom: WholeNum): Fraction = improper(num.toInt, denom.toInt)
 }
