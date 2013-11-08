@@ -15,13 +15,16 @@ class RhythmPattern protected(val meter: Fraction, val beats: Seq[Fraction]) {
    * Returns a new pattern which is offset * meter.denominator skewed/wrapped from this.
    */
   def mode(offset: Int): RhythmPattern = {
-    val bs = beats map {
-      b => b.plus(Fraction(offset, meter.denom)) match {
-        case f: Fraction => f
-        case _ => throw sys.error("Fraction plus Fraction returned a non-fraction")
+    val dif = beats(offset)
+    val bs = beats splitAt offset match {
+      case (head, tail) => {
+        def h = tail map (_.minus(dif))
+        def t = head map (_.plus(meter).minus(dif))
+        (h ++ t) map {
+          case f: Fraction => f
+          case _ => throw sys.error("Fraction operations returned a non-fraction")
+        }
       }
-    } map {
-      b => RhythmPattern.wrapBeat(meter, b)
     }
     RhythmPattern(meter, bs)
   }

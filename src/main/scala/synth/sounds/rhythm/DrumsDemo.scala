@@ -28,21 +28,16 @@ object DrumsDemo {
     "CYCdh_K1close_Flam-03.wav",
     "CYCdh_K1close_OpHat-05.wav",
     "CYCdh_K1close_SnrOff-06.wav",
-    "CYCdh_K1close_ClHat-05.wav",
+//    "CYCdh_K1close_ClHat-05.wav",
     "CYCdh_K1close_ClHat-07.wav",
     "CYCdh_K1close_OpHat-03.wav",
     "CYCdh_K1close_OpHat-07.wav"
   )
 
-  def main(args: Array[String]): Unit = {
+  val outDataFormat = new AudioFormat(SAMPLE_RATE, 8, 1, true, false)
 
-    val outDataFormat = new AudioFormat(SAMPLE_RATE, 8, 1, true, false)
-
-    val line = getLine(outDataFormat)
-
-    val tempo = 160
-
-    var cc = drumFileNames.map {
+  def getClipCollection(tempo: Int): ClipCollection =
+    drumFileNames.map {
       // map to files
       filename => new File(kitDir + filename)
     }.map {
@@ -58,6 +53,14 @@ object DrumsDemo {
       // add all clip collections together
       _ ++ _
     }
+
+  def main(args: Array[String]): Unit = {
+
+    val line = getLine(outDataFormat)
+
+    val tempo = 160
+
+    var cc = getClipCollection(tempo)
 
     val audioBytes = new Array[Byte](1024)
 

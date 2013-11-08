@@ -7,7 +7,7 @@ package synth.sounds
  * Time: 7:46 PM
  * To change this template use File | Settings | File Templates.
  */
-class ClipCollection protected(private val clips: Seq[ClipCollection.Clip] = Seq[ClipCollection.Clip](),
+class ClipCollection protected(val clips: Seq[ClipCollection.Clip] = Seq[ClipCollection.Clip](),
                                val currentOffset: Int = 0) {
 
   def isEmpty: Boolean = clips.isEmpty

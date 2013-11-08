@@ -14,7 +14,7 @@ class DrumPattern(rhythm: RhythmPattern, drumClip: Array[Byte])
   extends RhythmPattern(rhythm.meter, rhythm.beats) {
 
   override def mode(offset: Int): DrumPattern =
-    new DrumPattern(rhythm.mode(beats(offset % beats.size).num), drumClip)
+    new DrumPattern(rhythm.mode(offset), drumClip)
 
   /*
    * @tempo is the number of beats (1/meter.denominator) per minute
