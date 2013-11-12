@@ -1,0 +1,45 @@
+,,,,,,,,,,,,
+,Zarlino's scale is built using the ratios 4:5:6,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,Intervals,1,2,3,4,5,6,7,8,9,,
+,,,,,,,,,,,,
+,Ratios,4,,5,,6,,,,,,
+,,,,,4,,5,,6,,,
+,,,,,,4,,5,,6,,
+,,,,,,,,,,,,
+,Factors,,,1.25,,1.5,,,,,,
+,,,,,,,1.25,,1.5,,,
+,,,,,,,,1.25,,1.5,,
+,,,,,,,,,,,,Steps to derive intervals:
+,Frequencies,528,,,,,,,,,,Starting frequency
+,,,,660,,792,,,,,,1) derive 3 and 5 from left to right
+,,,,,,,,,1056,,,2) derive 8  ( = 2x interval 1 )
+,,,,,704,,880,,,,,3) derive 4 and 6 from right to left from interval 8 (octave)
+,,,,,,,,990,,1188,,4) derive 7 from left to right from interval 5
+,,,594,,,,,,,,,5) derive 2 by adjusting interval 9 down an octave
+,Names,1,M2,M3,4,5,M6,M7,,,,6) Assign Interval names
+,,C,D,E,F,G,A,B,C,D,,7) Assign letter names (C if starting freq is 528hz)
+,,,,,,,,,,,,
+,,,,m3,,,,m3,,,,"Ratios 4:5:6 produce the intervals "" 1, 4, 5"""
+,,,,,,,,,,,,This scale has  a major third that exists in the harmonic series
+,,,,,m3,,,,m3,,,The minor third is is derived from the M3 and the 5
+,Triads,C,D,E,F,G,A,B,,,,2:1    octave
+,,E,F,G,A,B,C,D,,,,3:2    fifth
+,,G,A,B,C,D,E,F,,,,4:3    fourth
+,,"M3, 5","M3, 5","m3, 5","M3, 5","M3, 5","m3, 5","m3, dim5",,,,5:4    M3
+,,,,,,,,,,,,6:5    m3
+,,,,,,,,,,,,
+,,"Interval
+from tonic",Note,"Interval to
+next step",,,,,,,,
+,,,,,,,,,,,,
+,,"""1 / 1""",C,"""9 / 8 """,tone+,,,,,,,
+,,"""9 / 8""",D,"""10 / 9""",tone-,,,,,,,
+,,"""5 / 4""",E,"""16 / 15""",semi-tone,,,,,,,
+,,"""4 / 3""",F,"""9 / 8""",tone+,,,,,,,
+,,"""3 / 2""",G,"""10 / 9""",tone-,,,,,,,
+,,"""5 / 3""",A,"""9 / 8""",tone+,,,,,,,
+,,"""15 / 8""",B,"""16 / 15""",semi-tone,,,,,,,
+,,"""2 / 1""",C,"""9 / 8""",tone+,,,,,,,

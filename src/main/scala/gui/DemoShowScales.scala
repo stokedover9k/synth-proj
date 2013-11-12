@@ -50,6 +50,9 @@ object DemoShowScales extends SimpleSwingApplication {
     },
     "Chromatic (Ptolemy)" -> {
       () => ScaleBuilderPtolemyChromatic(fundamental).build
+    },
+    "Zarlino" -> {
+      () => ScaleBuilderZarlino(fundamental).build
     }
   )
 

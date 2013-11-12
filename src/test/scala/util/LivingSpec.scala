@@ -66,6 +66,12 @@ abstract class LivingSpec extends Specification {
     }, getDataCol(colNum))
   }
 
+  def mustEqualRowUnlessEmpty[T](row: Seq[T], rowNum: Int): Unit = {
+    seqsMustEqualUnlessEmpty(row map {
+      _.toString
+    }, getDataRow(rowNum))
+  }
+
   def mustEqualMappedCol[T](f: String => T)(col: Seq[T], colNum: Int): Unit =
     seqsMustEqual(col, getDataCol(colNum) map f)
 

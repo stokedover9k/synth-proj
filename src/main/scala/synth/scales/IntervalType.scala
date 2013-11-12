@@ -43,5 +43,9 @@ object IntervalType {
     First, Minor2, Major2, Minor3, Major3, Fourth, Dim5, Fifth, Minor6, Major6, Minor7, Major7
   )
 
+  lazy val getWholeSteps = Seq(
+    First, Major2, Major3, Fourth, Fifth, Major6, Major7
+  )
+
   def index(interval: IntervalType): Int = getAll.indexOf(interval)
 }
