@@ -1,6 +1,7 @@
 package synth.scales
 
 import util.expr.{Expr, Fraction}
+import synth.Series
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +16,7 @@ case class ScaleBuilderZarlino(fundamental: Float)
 
   import ScaleBuilderZarlino.CustomInterval
 
-  def getIntervals: Seq[CustomInterval] = {
+  def getIntervals: scala.collection.immutable.IndexedSeq[Series.Interval] = {
     def construct(degree: Int, from: CustomInterval, ratio: Expr, octave: Integer = null): CustomInterval =
       new CustomInterval(degree, from.generatingExpression.mult(ratio), from.fundamental, if (octave == null) from.octave else octave)
 
@@ -34,10 +35,20 @@ case class ScaleBuilderZarlino(fundamental: Float)
     val i6 = construct(6, i8, sixDown, octave = 0)
     val i4 = construct(4, i6, fiveDown, octave = 0)
 
-    Seq(i1, i2, i3, i4, i5, i6, i7, i8)
+    scala.collection.immutable.IndexedSeq(i1, i2, i3, i4, i5, i6, i7, i8)
   }
 
-  def build(): TypedScale = OctaveWrappedScale(getIntervals, ScaleBuilderZarlino.allTypes, ScaleBuilderZarlino.allNotes)
+  def build(): TypedScale with WesternModes =
+    new OctaveWrappedScale(getIntervals, ScaleBuilderZarlino.allTypes, ScaleBuilderZarlino.allNotes) with WesternModes {
+      def Ionian: ScaleMode = mode(0)
+      def Dorian: ScaleMode = mode(1)
+      def Phrygian: ScaleMode = mode(2)
+      def Lydian: ScaleMode = mode(3)
+      def Mixolydian: ScaleMode = mode(4)
+      def Aeolian: ScaleMode = mode(5)
+      def Locrian: ScaleMode = mode(6)
+      def IonianOctave: ScaleMode = mode(7)
+    }
 }
 
 
@@ -56,7 +67,7 @@ object ScaleBuilderZarlino {
       new CustomInterval(degree, generatingExpression, fundamental, octave - 1)
   }
 
-  lazy val allTypes = IntervalType.getWholeSteps :+ IntervalType.First
+  lazy val allTypes = IntervalType.getWholeSteps :+ IntervalType.First toIndexedSeq
 
-  lazy val allNotes = "C|D|E|F|G|A|B|C".split("\\|").toSeq
+  lazy val allNotes = "C|D|E|F|G|A|B|C".split("\\|").toIndexedSeq
 }
