@@ -1,6 +1,6 @@
 package synth.sounds
 
-import synth.scales.{IntervalType, ScaleBuilderWesternHepto, ScaleBuilderPtolemyChromatic, ScaleBuilderZarlino}
+import synth.scales.{IntervalType, ScaleBuilderWesternHepto, ScaleBuilderPtolemyChromatic}
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,41 +9,6 @@ import synth.scales.{IntervalType, ScaleBuilderWesternHepto, ScaleBuilderPtolemy
  * Time: 4:34 PM
  * To change this template use File | Settings | File Templates.
  */
-
-abstract class Chord {
-
-  def tones: Seq[Tone]
-
-  def getSamples(samples: Array[Float]): Chord
-}
-
-class ComplexChord protected(override val tones: Seq[ComplexTone], private val synthesizers: Seq[ToneSynthesiser])
-  extends Chord {
-
-  def getSamples(samples: Array[Float]): ComplexChord = {
-    val tmpSamples = new Array[Float](samples.size)
-    val totalSamples = new Array[Float](samples.size)
-    val newSynths = (tones, synthesizers).zipped.map {
-      case (t, s) => {
-        val newSynth = s.getSamples(t, tmpSamples)
-        tmpSamples.zipWithIndex.foreach {
-          case (v, i) => totalSamples(i) = totalSamples(i) + v
-        }
-        newSynth
-      }
-    }
-    for (i <- 0 until samples.size) samples(i) = Math.min(1, Math.max(-1, totalSamples(i)))
-    new ComplexChord(tones, newSynths)
-  }
-}
-
-object ComplexChord {
-
-  def apply(tones: Seq[ComplexTone], sampleRate: Float = 44100f): ComplexChord = {
-    new ComplexChord(tones, Array.fill(tones.size)(WavedToneSynthesiser(sampleRate = sampleRate)))
-  }
-}
-
 
 object ChordPlayer {
   val toneComponents = Seq(
@@ -70,7 +35,8 @@ object ChordPlayer {
     val scale2 = scale1.mode(3)
     val scale3 = scale1.mode(4)
 
-    def tone(i: synth.Series.Interval) = ComplexTone(i.hz, toneComponents)
+    def tone(i: synth.Series.Interval) =
+      ComplexTone(i.hz, toneComponents)
 
     (scale1.intervals, scale2.intervals, scale3.intervals).zipped.foreach {
       case (i1, i2, i3) => {
