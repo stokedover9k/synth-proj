@@ -54,6 +54,11 @@ The following are some of the Living Specs (in *src/test/scala/synth/*):
 
 	> Ensures that the Pythagorean series displays correct cents values.
 
++ scales/ZarlinoScLivingSpec.scala
+
+	> Ensures that the Zarlino scale intervals are compute correctly.
+
+
 Running the Specifications
 --------------------------
 
@@ -89,6 +94,10 @@ Here are some of the demos:
 +	gui.DemoShowScales
 
 	> A GUI app that shows and plays several scales.
+
++	gui.DemoHarmony
+
+	> A GUI app that plays harmony on top of Ptolemy scale
 
 Run them with no arguments to see the usage message.
 
