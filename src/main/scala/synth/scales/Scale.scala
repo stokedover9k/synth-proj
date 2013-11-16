@@ -100,9 +100,9 @@ object UniqueScale {
 
   def apply(intervals: Seq[Interval], types: Seq[IntervalType], names: Seq[String]): UniqueScale = {
     if (intervals.size != types.size)
-      throw sys.error("expecting as many types as intervals")
+      throw sys.error("tried to construct scale with %d types and %d intervals".format(types.size, intervals.size))
     if (intervals.size != names.size)
-      throw sys.error("expecting as many names as intervals")
+      throw sys.error("tried to construct scale with %d names and %d intervals".format(names.size, intervals.size))
     if (intervals.groupBy(_.hz).size != intervals.size)
       throw sys.error("expecting unique frequencies")
     new UniqueScale(intervals.toIndexedSeq, types.toIndexedSeq, names.toIndexedSeq)

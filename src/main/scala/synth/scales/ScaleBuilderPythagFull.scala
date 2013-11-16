@@ -1,6 +1,6 @@
 package synth.scales
 
-import synth.{SeriesEvenTemp, SeriesPythagorean}
+import synth.{SeriesPythagorean}
 
 /**
  * Created with IntelliJ IDEA.

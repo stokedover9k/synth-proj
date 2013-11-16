@@ -21,7 +21,7 @@ class FullPythagScLivingSpec extends LivingSpec {
 
   lazy val fundamental: Float = livingSpecData(dataSkipRows + dataRows - 3)(dataSkipCols).toFloat
 
-    "Full Pythagorean Scale" should {
+  "Full Pythagorean Scale" should {
 
     trait Fixture extends Scope {
 
@@ -42,11 +42,14 @@ class FullPythagScLivingSpec extends LivingSpec {
 
       lazy val allIntervals = 0 until dataCols map {
         scale(_)
-      } match {  // the last note returned is in the second octave, so we drop it down to first to match the spec
+      } match {
+        // the last note returned is in the second octave, so we drop it down to first to match the spec
         case ns => ns.take(ns.size - 1) :+ ns.drop(ns.size - 1).head.octaveDown
       }
 
-      lazy val allNotes = 0 until dataCols map { scale.getName(_) }
+      lazy val allNotes = 0 until dataCols map {
+        scale.getName(_)
+      }
 
     }
 
