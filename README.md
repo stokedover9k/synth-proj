@@ -58,6 +58,11 @@ The following are some of the Living Specs (in *src/test/scala/synth/*):
 
 	> Ensures that the Zarlino scale intervals are compute correctly.
 
++ scales/MeanToneScLivingSpec.scala
+
+	> Ensures that the Mean-Tone scale is computed correctly.
+
+
 
 Running the Specifications
 --------------------------
@@ -98,6 +103,11 @@ Here are some of the demos:
 +	gui.DemoHarmony
 
 	> A GUI app that plays harmony on top of Ptolemy scale
+
++	gui.DemoMaryHadALittleLamb
+
+	> A GUI app that plays "Mary Had a Little Lamb"
+
 
 Run them with no arguments to see the usage message.
 
