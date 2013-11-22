@@ -13,11 +13,12 @@ package object sounds {
 
   val SAMPLE_RATE: Float = 44100
 
-  def getLine: SourceDataLine = {
-    val af: AudioFormat = new AudioFormat( SAMPLE_RATE, 8, 1, true, false )
-    var sdl: SourceDataLine = AudioSystem.getSourceDataLine( af )
-    sdl = AudioSystem.getSourceDataLine( af )
-    sdl.open( af )
+  val DEFAULT_FORMAT: AudioFormat = new AudioFormat(SAMPLE_RATE, 8, 1, true, false)
+
+  def getLine(implicit af: AudioFormat = DEFAULT_FORMAT): SourceDataLine = {
+    var sdl: SourceDataLine = AudioSystem.getSourceDataLine(af)
+    sdl = AudioSystem.getSourceDataLine(af)
+    sdl.open(af)
     sdl.start()
     sdl
   }

@@ -24,27 +24,27 @@ abstract class ToneSynthesiser {
    * Returns a synthesiser which is the same as this, but at the state after getting
    * the specified samples.
    */
-  protected def afterSampling(tone: => ComplexTone, samples: => Array[Float]): ToneSynthesiser
+  protected def afterSampling(tone: => ComplexTone, num: Int = -1, offset: Int = 0, samples: => Array[Float] = Array()): ToneSynthesiser
 
   /*
-   * Fills up the sample buffers with amplitude samples and returns a new synthesiser
-   * in the post-sampling state.
+   * Fills up the sample buffers with @num amplitude samples starting at buffer offset at @offset
+   * and returns a new synthesiser in the post-sampling state.
    */
-  def getSamples(tone: ComplexTone, samples: Array[Float]): ToneSynthesiser = {
+  def getSamples(tone: ComplexTone, samples: Array[Float], num: Int = -1, offset: Int = 0) = {
     def hz(cmp: ComplexTone.Component): Float = tone.hz * cmp.hzRatio
 
-    0 until samples.size foreach {
-      i =>
-        samples(i) = (0f /: tone.components)(
-          (sum: Float, cmp: ComplexTone.Component) =>
-            sum + cmp.ampRatio * sample(i, hz(cmp))
-        )
+    val last = if (num >= 0) offset + num else samples.size
+
+    for (i <- offset until last) {
+      samples(i) = (0f /: tone.components)(
+        (sum: Float, cmp: ComplexTone.Component) =>
+          sum + cmp.ampRatio * sample(i - offset, hz(cmp))
+      )
     }
 
-    afterSampling(tone, samples)
+    afterSampling(tone, last - offset, offset, samples)
   }
 }
-
 
 
 class WavedToneSynthesiser private(
@@ -64,8 +64,8 @@ class WavedToneSynthesiser private(
    * Returns a synthesiser which is the same as this, but at the state after getting
    * the specified samples
    */
-  protected def afterSampling(tone: => ComplexTone, samples: => Array[Float]): ToneSynthesiser =
-    new WavedToneSynthesiser(wave, sampleRate, timeOfStep(samples.size))
+  override protected def afterSampling(tone: => ComplexTone, num: Int, offset: Int, samples: => Array[Float]): ToneSynthesiser =
+    new WavedToneSynthesiser(wave, sampleRate, timeOfStep(num))
 }
 
 object WavedToneSynthesiser {
