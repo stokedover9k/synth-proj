@@ -3,6 +3,7 @@ package synth.sounds.util
 import javax.sound.sampled.{SourceDataLine, AudioFormat}
 import synth.sounds._
 import synth.scales.ScaleBuilderMeanTone
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,12 +15,10 @@ import synth.scales.ScaleBuilderMeanTone
 
 object SoundStream {
 
-  private val CHORD_BUFFER_SIZE = 1024 * 4
-
   /*
    * @arg chords contains tuples like (chord, number of remaining frames).
    */
-  def getSampleStream(timedChords: List[(ComplexChord, Int)]): Stream[Float] = {
+  def getSampleStream(timedChords: List[(ComplexChord, Int)], CHORD_BUFFER_SIZE: Int = 1024 * 4): Stream[Float] = {
 
     val buffer = new Array[Float](CHORD_BUFFER_SIZE)
 
@@ -40,74 +39,54 @@ object SoundStream {
     loop(timedChords)
   }
 
+  /*
+   * Note that the stream is wrapped into a reference object so that its head can be garbage collected
+   * (otherwise, the original object remains on the stack and prevents cleanup).
+   */
+  private def streamPlayer = (line: SourceDataLine) => (framesPerBuffer: Int) => (streamRef: AtomicReference[Stream[Byte]], frames: Int) => {
 
-  def makePlayer: SourceDataLine => Int => ((Stream[Array[Byte]], Int) => Stream[Array[Byte]]) =
-    line => framesPerBuffer => {
+    val bytesPerFrame = line.getFormat.getFrameSize
 
-    def play(s: Stream[Array[Byte]], frames: Int): Stream[Array[Byte]] = {
-        val (n, df) =
-          if (frames == -1) (framesPerBuffer, 0)
-          else (Math.min(frames, framesPerBuffer), -Math.min(frames, framesPerBuffer))
+    def play(streamRef: AtomicReference[Stream[Byte]], frames: Int): Stream[Byte] = {
+      val (n, df) =
+        if (frames == -1) (framesPerBuffer * bytesPerFrame, 0)
+        else (Math.min(frames, framesPerBuffer) * bytesPerFrame, -Math.min(frames, framesPerBuffer))
 
-        if (frames > 0 || frames == -1) {
-          val (head, tail) = s.splitAt(n)
-          val samples = head.toArray.flatten
-          line.write(samples, 0, samples.size)
-          if (tail.nonEmpty)
-            play(tail, frames + df)
-          else
-            tail
-        }
+      if (frames > 0 || frames == -1) {
+        val (head, tail) = streamRef.getAndSet(null).splitAt(n)
+        val samples = head.toArray
+        line.write(samples, 0, samples.size)
+        if (tail.nonEmpty)
+          play(new AtomicReference(tail), frames + df)
         else
-          s
+          tail
       }
-
-      play
-  }
-
-  private def streamPlayer(line: SourceDataLine)(framesPerBuffer: Int)(s: Stream[Array[Byte]], frames: Int): Stream[Array[Byte]] = {
-
-      def play(s: Stream[Array[Byte]], frames: Int): Stream[Array[Byte]] = {
-        val (n, df) =
-          if (frames == -1) (framesPerBuffer, 0)
-          else (Math.min(frames, framesPerBuffer), -Math.min(frames, framesPerBuffer))
-
-        if (frames > 0 || frames == -1) {
-          val (head, tail) = s.splitAt(n)
-          val samples = head.toArray.flatten
-          line.write(samples, 0, samples.size)
-          if (tail.nonEmpty)
-            play(tail, frames + df)
-          else
-            tail
-        }
-        else
-          s
-      }
-
-      play(s, frames)
+      else
+        streamRef.getAndSet(null)
     }
 
-  def streamPlayerFor(line: SourceDataLine)(framesPerBuffer: Int) = streamPlayer(line)(framesPerBuffer)(_, _)
+    play(new AtomicReference[Stream[Byte]](streamRef.getAndSet(null)), frames)
+  }
 
+  def streamPlayerFor(line: SourceDataLine)(framesPerBuffer: Int) = streamPlayer(line)(framesPerBuffer)(_, _)
 }
 
 object SoundStreamTest extends App {
 
   val SAMPLE_RATE = synth.sounds.SAMPLE_RATE
 
-    val toneComponents = Seq(ComplexTone.Component(1f, 1f))
-//  val toneComponents = synth.sounds.ChordPlayer.toneComponents
+//  val toneComponents = Seq(ComplexTone.Component(1f, 1f))
+    val toneComponents = synth.sounds.ChordPlayer.toneComponents
 
   val scale = ScaleBuilderMeanTone(528f).build
 
   val song: List[(String, Float)] = {
-    val notes = "E,D,C,D,E,E,E,D,D,D,E,G,G,E,D,C,D,E,E,E,E,D,D,E,D,C".split(",").toList
-    val durations = List(1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 4) map (_ * .5f)
+    val notes =         "E,D,C,D,E,E,E,D,D,D,E,G,G,E,D,C,D,E,E,E,E,D,D,E,D,C".split(",").toList
+    val durations = List(1,1,1,1,1,1,2,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,4) map (_ * .5f)
     notes zip durations
   }
 
-  val chordFrames = song map {
+  val chordFrames = song ++ song ++ song ++ song map {
     case (note: String, duration: Float) =>
       ComplexChord(Seq(ComplexTone(scale(note).hz, toneComponents))) -> (duration * SAMPLE_RATE).toInt
   }
@@ -116,31 +95,13 @@ object SoundStreamTest extends App {
 
   val line = synth.sounds.getLine(outFormat)
 
-  def play(s: Stream[Array[Byte]], frames: Int, framesPerBuffer: Int = 512): Stream[Array[Byte]] = {
-    val (n, df) =
-      if (frames == -1) (framesPerBuffer, 0)
-      else (Math.min(frames, framesPerBuffer), -Math.min(frames, framesPerBuffer))
+  val player = SoundStream.streamPlayerFor(line)(SAMPLE_RATE.toInt / 8)
 
-    if (frames > 0 || frames == -1) {
-      val (head, tail) = s.splitAt(n)
-      val samples = head.toArray.flatten
-      line.write(samples, 0, samples.size)
-      if (tail.nonEmpty)
-        play(tail, frames + df, framesPerBuffer)
-      else
-        tail
-    }
-    else
-      s
-  }
+  def songStream = SoundStream.getSampleStream(chordFrames) map (Formats.floatConverter(line.getFormat)) flatten
 
-//  play(SoundStream.getSampleStream(chordFrames) map (Formats.floatConverter(line.getFormat)), -1, SAMPLE_RATE.toInt)
-
-  val player = SoundStream.streamPlayerFor(line)(1024 * 4)
-  player(SoundStream.getSampleStream(chordFrames) map (Formats.floatConverter(line.getFormat)), -1)
+  player(new AtomicReference(songStream), -1)
 
   line.drain()
   line.stop()
   line.close()
-
 }
