@@ -53,6 +53,12 @@ object DemoShowScales extends SimpleSwingApplication {
     },
     "Zarlino" -> {
       () => ScaleBuilderZarlino(fundamental).build
+    },
+    "Mean Tone" -> {
+      () => ScaleBuilderMeanTone(fundamental).build
+    },
+    "Rameau" -> {
+      () => ScaleBuilderRameau(fundamental).build
     }
   )
 
