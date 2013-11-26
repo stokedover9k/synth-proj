@@ -16,9 +16,6 @@ case class ScaleBuilderPtolemyChromatic(fundamental: Float)
 
   private lazy val dodecophonic = ScaleBuilderDodecophonicFull(fundamental).build()
 
-  lazy val series = SeriesPythagorean(fundamental)
-
-
   def allIntervals = {
     val comma = dodecophonic.allTypes.indexOf(IntervalType.Dim5)
 
