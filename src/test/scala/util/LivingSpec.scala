@@ -84,6 +84,12 @@ abstract class LivingSpec extends Specification {
     }, getDataRow(rowNum))
   }
 
+  def mustEqualRow[T](row: Seq[T], rowNum: Int, offset: Int, n: Int): Unit = {
+    seqsMustEqual(row map {
+      _.toString
+    }, getDataRow(rowNum) drop offset take n)
+  }
+
   def mustEqualFloatCol(col: Seq[Float], colNum: Int): Unit = {
     val dt = livingSpecData.drop(dataSkipRows) map {
       row => row(colNum).toFloat

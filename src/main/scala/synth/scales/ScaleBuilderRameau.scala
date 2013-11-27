@@ -12,8 +12,11 @@ import synth.Series.Interval
  * To change this template use File | Settings | File Templates.
  */
 
-case class ScaleBuilderRameau(fundamentalHz: Float) extends ScaleBuilder {
-  def build(): TypedScale = OctaveWrappedScale(allIntervals, ScaleBuilderRameau.allTypes, ScaleBuilderRameau.allNames)
+case class ScaleBuilderRameau(fundamentalHz: Float, notes: Seq[String] = ScaleBuilderRameau.allNames)
+  extends ScaleBuilder {
+
+  override lazy val build: TypedScale =
+    OctaveWrappedScale(allIntervals, ScaleBuilderRameau.allTypes, notes :+ notes(0))
 
   private def makeInterval(oct: Int)(e: (Expr, Int)): Series.Interval = e match {
     case (ratio: Expr, deg: Int) =>
@@ -36,6 +39,16 @@ case class ScaleBuilderRameau(fundamentalHz: Float) extends ScaleBuilder {
     val iss = is.groupBy(_.hz).map(_._2.head).toIndexedSeq.sortBy(_.hz)
     iss :+ iss(0).octaveUp
   }
+
+  def fifthUpBuilder: ScaleBuilderRameau = {
+    val ns = (notes drop 4) ++ (notes take 3) :+ ScaleBuilderRameau.sharps(notes(4))
+    ScaleBuilderRameau(build(IntervalType.Fifth).hz, ns)
+  }
+
+  def fourthUpBuilder: ScaleBuilderRameau = {
+    val ns = ((notes drop 3 take 3) :+ ScaleBuilderRameau.flats(notes(3))) ++ (notes take 3)
+    ScaleBuilderRameau(build(IntervalType.Fourth).hz, ns)
+  }
 }
 
 object ScaleBuilderRameau {
@@ -51,9 +64,27 @@ object ScaleBuilderRameau {
     (triad(i1) ++ triad(i4) ++ triad(i5))
   }
 
-  lazy val allNames = "C D E F G A B C".split("\\s+")
+  lazy val allNames = "C D E F G A B".split("\\s+")
 
   import IntervalType._
 
   lazy val allTypes = List(First, Major2, Major3, Fourth, Fifth, Major6, Major7, First)
+
+  lazy val sharps = Map(
+    "C" -> "B",
+    "G" -> "F#",
+    "D" -> "C#",
+    "A" -> "G#",
+    "E" -> "D#",
+    "B" ->	"A#"
+  )
+
+  lazy val flats = Map(
+    "C" -> "F",
+    "F" -> "Bb",
+    "Bb" -> "Eb",
+    "Eb" -> "Ab",
+    "Ab" -> "Db",
+    "Db" -> "Gb"
+  )
 }
