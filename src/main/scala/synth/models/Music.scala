@@ -108,8 +108,6 @@ object ScaleState {
       val index = scale.intervals.zipWithIndex.find(i => i._1.hz == interval.hz).get._2
       scale.allNames(index)
     }
-    def named(interval: Series.Interval): String =
-      "%s [%f]".format(name(interval), interval.hz)
 
     val state = new ScaleState(scale)
 

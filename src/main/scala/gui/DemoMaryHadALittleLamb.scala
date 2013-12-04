@@ -53,7 +53,6 @@ object DemoMaryHadALittleLamb extends SimpleSwingApplication {
       player(new AtomicReference(songStream), -1)
 
       line.drain()
-      line.stop()
       playButton.enabled = true
     }
     case _ =>
