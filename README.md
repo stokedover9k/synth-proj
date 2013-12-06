@@ -62,6 +62,14 @@ The following are some of the Living Specs (in *src/test/scala/synth/*):
 
 	> Ensures that the Mean-Tone scale is computed correctly.
 
++ scales/RameauScLivingSpec.scala
+
+	> Ensures that the Rameau scale is computed correctly.
+
++ scales/RameauFourthsAndFifthsScLivingSpec.scala
+
+	> Ensures that Rameau scales derived from 4th's and 5th's are computed correctly.
+
 
 
 Running the Specifications
