@@ -2,7 +2,6 @@ package synth
 
 import util.expr.{Fraction, Expr}
 import scala.collection.mutable
-import synth.oldscales.Series2Scale7
 
 case class SeriesHarmonic(fundamental: Float) extends Series {
 
@@ -20,11 +19,6 @@ object SeriesHarmonic {
     override def octaveUp: Interval = Interval(degree, fundamental, octave + 1)
 
     override def octaveDown: Series.Interval = Interval(degree, fundamental, octave - 1)
-  }
-
-  trait Extracts7Notes extends Series2Scale7[SeriesHarmonic] {
-    override def sorted7(s: SeriesHarmonic): IndexedSeq[Interval] =
-      (Seq(1, 2, 4, 6, 8, 10, 12) map (s(_))).toArray[Interval].sortBy(_.hz)
   }
 
   def sorted13(s: SeriesHarmonic): IndexedSeq[Interval] = {
