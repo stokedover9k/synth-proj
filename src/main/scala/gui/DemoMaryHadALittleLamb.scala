@@ -1,13 +1,13 @@
 package gui
 
 import scala.swing._
-import scala.swing.event.ButtonClicked
 import synth.sounds.util.{SoundStream, Formats}
 import javax.sound.sampled.AudioFormat
 import synth.sounds.{ComplexChord, ComplexTone}
-import synth.scales.ScaleBuilderMeanTone
+import synth.scales._
 import java.util.concurrent.atomic.AtomicReference
 import java.awt.Color
+import scala.swing.event.ButtonClicked
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,7 +24,27 @@ object DemoMaryHadALittleLamb extends SimpleSwingApplication {
 
   lazy val toneComponents = synth.sounds.ChordPlayer.toneComponents
 
-  lazy val scale = ScaleBuilderMeanTone(528f).build
+  lazy val scales = Map[String, TypedScale](
+    "Mean Tone" -> ScaleBuilderMeanTone(528).build
+    , "Zarlino" -> ScaleBuilderZarlino(528).build
+    , "Rameau" -> ScaleBuilderRameau(528).build
+    , "Pythagorean" -> ScaleBuilderPythagHepto(528).build
+  )
+
+  val buttons = scales.keys.toSeq.sortBy(_.toString) map (new RadioButton(_))
+
+  val buttonGroup = new ButtonGroup(buttons.toSeq: _*)
+
+  buttons foreach (listenTo(_))
+
+  buttons.head.selected = true
+
+  var scale: TypedScale = scales(buttons.head.text)
+
+  val scaleOptionsPanel = new FlowPanel {
+    for (button <- buttons)
+      contents += button
+  }
 
   lazy val song: List[(String, Float)] = {
     val notes = "E,D,C,D,E,E,E,D,D,D,E,G,G,E,D,C,D,E,E,E,E,D,D,E,D,C".split(",").toList
@@ -32,7 +52,7 @@ object DemoMaryHadALittleLamb extends SimpleSwingApplication {
     notes zip durations
   }
 
-  lazy val chordFrames = song map {
+  def chordFrames = song map {
     case (note: String, duration: Float) =>
       ComplexChord(Seq(ComplexTone(scale(note).hz, toneComponents))) -> (duration * SAMPLE_RATE).toInt
   }
@@ -48,13 +68,17 @@ object DemoMaryHadALittleLamb extends SimpleSwingApplication {
   listenTo(playButton)
 
   reactions += {
-    case ButtonClicked(playButton) => {
-      playButton.enabled = false
-      player(new AtomicReference(songStream), -1)
+    case ButtonClicked(button) => {
+      if (button == playButton) {
+        button.enabled = false
+        player(new AtomicReference(songStream), -1)
 
-      line.drain()
-      line.stop()
-      playButton.enabled = true
+        line.drain()
+        button.enabled = true
+      }
+      else {
+        scale = scales(button.text)
+      }
     }
     case _ =>
   }
@@ -82,7 +106,8 @@ object DemoMaryHadALittleLamb extends SimpleSwingApplication {
 
     title = "Mary Had a Little Lamb"
     contents = new BorderPanel {
-      add(playButton, BorderPanel.Position.Center)
+      add(playButton, BorderPanel.Position.South)
+      add(scaleOptionsPanel, BorderPanel.Position.Center)
       add(notesDisplay, BorderPanel.Position.North)
     }
   }
