@@ -129,6 +129,3 @@ object ScaleState {
     }
   }
 }
-
-
-

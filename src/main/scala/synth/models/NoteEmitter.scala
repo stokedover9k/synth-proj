@@ -3,7 +3,7 @@ package synth.models
 import util.{Counters, Counter, CounterMap}
 import synth.Series.Interval
 import util.expr.Fraction
-import synth.scales.{ScaleBuilderZarlino, TypedScale, Scale}
+import synth.scales._
 import synth.sounds.{ComplexTone, ComplexChord}
 import synth.sounds.util.{SoundStream, Formats}
 import javax.sound.sampled.AudioFormat
@@ -169,6 +169,51 @@ object ChordEmitter {
 
     DemoChordPlayer.demoPlayChords(scale, events)
   }
+}
+
+object QuizStuff {
+  val toneComponents = Seq(
+    ComplexTone.Component(1f, 1f)
+  )
+
+  val scale = ScaleBuilderPythagHepto(400).build
+
+  val first = ComplexTone(scale(IntervalType.First).hz, toneComponents)
+
+  val tone3 = ComplexTone(scale(IntervalType.Major3).hz, toneComponents)
+  val pure3 = ComplexTone(400f * 5 / 4, toneComponents)
+
+  def play(chords: List[(ComplexChord, Int)]): Unit = {
+    val chordFrames = chords map {
+      case (chord: ComplexChord, seconds: Int) => (chord, (seconds * DemoChordPlayer.SAMPLE_RATE).toInt)
+    }
+    DemoChordPlayer.demoPlay(chordFrames)
+  }
+}
+
+object Quiz1 extends App {
+  import QuizStuff._
+
+  println(scale(IntervalType.Major3).hz)
+  println(400f * 5 / 4)
+
+  val chord1 = ComplexChord(Seq(tone3))
+  val chord2 = ComplexChord(Seq(tone3, pure3))
+
+  val chords = List((chord1, 3), (chord2, 3))
+
+  play(chords)
+}
+
+object Quiz2 extends App {
+  import QuizStuff._
+
+  val chord1 = ComplexChord(Seq(first, tone3))
+  val chord2 = ComplexChord(Seq(first, pure3))
+
+  val chords = List((chord1, 3), (chord2, 3))
+
+  play(chords)
 }
 
 object DemoChordPlayer {
