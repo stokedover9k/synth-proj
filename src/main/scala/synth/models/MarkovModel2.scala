@@ -1,6 +1,7 @@
 package synth.models
 
-import util.{Counters, Counter}
+import util.{CounterMap, Counters, Counter}
+import synth.scales.{ScaleBuilderRameau, TypedScale}
 
 /**
  * Created with IntelliJ IDEA.
@@ -48,6 +49,115 @@ trait HasTransitionCosts[T] extends State[T] {
     }
     counter.normalize
     counter
+  }
+}
+
+abstract class CombinationState[T] extends HasTransitionCosts[Traversable[T]] {
+
+  def elementCost(t: T): Double
+
+  def transitionCosts: Counter[Traversable[T]] = {
+    val counter = new Counter[Traversable[T]]()
+    transitions foreach {
+      t => counter.incrementCount(t, (t map elementCost).sum)
+    }
+    counter
+  }
+}
+
+abstract class FullCombinationState[T] extends CombinationState[T] {
+
+  def elements: Seq[T]
+
+  def transitions: TraversableOnce[Traversable[T]] = {
+    def loop(n: Int): Stream[Seq[T]] = {
+      if (n <= 0) Stream()
+      else if (n == 1) elements.combinations(n).toStream
+      else elements.combinations(n).toStream #::: loop(n - 1)
+    }
+    loop(elements.size)
+  }
+}
+
+class ChordState(
+                  override val elements: Seq[String]
+                  , val myNotes: Traversable[String]
+                  , val dissonance: (String, String) => Double
+                  )
+  extends FullCombinationState[String] {
+
+  def elementCost(t: String): Double =
+    (myNotes map (n => dissonance(t, n))).sum
+
+  def apply(trans: Traversable[String]): ChordState = new ChordState(elements, trans, dissonance)
+}
+
+class Heat[T] {
+  private val heat = new Counter[T]()
+
+  def heatUp(element: T, v: Double = 1): Unit = heat.incrementCount(element, v)
+
+  def cool(v: Double = 2): Unit = heat.scale(1d / v)
+
+  def totalHeat: Double = heat.totalCount()
+
+  def apply(element: T): Double = heat.getCount(element)
+
+  def getCounter = heat
+}
+
+class HeatedChordState(
+                        override val elements: Seq[String]
+                        , override val myNotes: Traversable[String]
+                        , override val dissonance: (String, String) => Double
+                        , val heat: Heat[String]
+                        )
+  extends ChordState(elements, myNotes, dissonance) {
+
+  override def elementCost(t: String): Double =
+    (myNotes map (n => dissonance(t, n) * heat(n))).sum + 1
+
+  override def apply(trans: Traversable[String]): HeatedChordState = {
+    trans foreach (t => heat.heatUp(t, 1))
+    heat.cool(heat.totalHeat)
+    new HeatedChordState(elements, trans, dissonance, heat)
+  }
+
+  override def toString: String = elements.toString
+}
+
+object HeatedChordState {
+
+  def apply(scale: TypedScale, dissonance: (String, String) => Double): HeatedChordState = {
+    val heat = new Heat[String]
+    uniqueNotes(scale) foreach (n => heat.heatUp(n))
+    new HeatedChordState(uniqueNotes(scale), Seq[String](), dissonance, heat)
+  }
+
+  def uniqueNotes(scale: TypedScale) =
+    scale.allNames.groupBy(n => n).map(_._1).toList
+
+  def dissonanceFunction(scale: TypedScale): (String, String) => Double = {
+    val notes = uniqueNotes(scale)
+
+    val counts = new CounterMap[String, String]()
+
+    for (n1 <- notes)
+      for (n2 <- notes) {
+        val dis = SuperParticularDissonance(scale(n1))(scale(n2))
+        counts.incrementCount(n1, n2, dis)
+      }
+
+    (a: String, b: String) => counts.getCount(a, b)
+  }
+
+  def main(args: Array[String]): Unit = {
+
+    val scale = ScaleBuilderRameau(528).build
+    val dissonance = dissonanceFunction(scale)
+    val state = apply(scale, dissonance)
+
+    MarkovModelTester.runRounds(state, 5)
   }
 }
 
