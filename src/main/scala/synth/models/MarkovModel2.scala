@@ -2,6 +2,8 @@ package synth.models
 
 import util.{CounterMap, Counters, Counter}
 import synth.scales.{ScaleBuilderRameau, TypedScale}
+import synth.Series.Interval
+import util.expr.Fraction
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,6 +12,24 @@ import synth.scales.{ScaleBuilderRameau, TypedScale}
  * Time: 4:12 PM
  * To change this template use File | Settings | File Templates.
  */
+
+object SuperParticularDissonance2 extends Dissonance {
+  def apply(i1: Interval)(i2: Interval): Double =
+    i1.hzFactor.div(i2.hzFactor) match {
+      case frac: Fraction =>
+//        if (frac.toFloat == 1)
+//          1
+//        else
+        {
+          val n = frac.num.toFloat
+          val d = frac.denom.toFloat
+          //          Math.pow(1 + Math.abs(frac.num.toFloat - frac.denom.toFloat) / (frac.num.toFloat + frac.denom.toFloat), 2)
+          Math.log(Math.pow((n + d) / (1 + Math.abs(n - d)), 1))
+        }
+      case f =>
+        throw sys.error("expecting a fractional interval ratio but found '%s'".format(f.toString))
+    }
+}
 
 abstract class MarkovModel2[D, S <: State[D]] {
 
@@ -93,14 +113,11 @@ class ChordState(
                   )
   extends FullCombinationState[String] {
 
-  def elementCost(t: String): Double =
-    (myNotes map (n => dissonance(t, n))).sum
+  def elementCost(t: String): Double = (myNotes map (n => dissonance(t, n))).sum
 
   def apply(trans: Traversable[String]): ChordState = new ChordState(elements, trans, dissonance, chordCosts)
 
-  def combinationCost: (Traversable[String]) => Double = {
-    chordCosts
-  }
+  def combinationCost: (Traversable[String]) => Double = chordCosts
 }
 
 class Heat[T] {
@@ -127,7 +144,8 @@ class HeatedChordState(
   extends ChordState(elements, myNotes, dissonance, chordCosts) {
 
   override def elementCost(t: String): Double =
-    (myNotes map (n => dissonance(t, n) * heat(n))).sum + 1
+//    (myNotes map (n => dissonance(t, n) * heat(n))).sum + 1
+    (elements map (n => dissonance(t, n) * heat(n))).sum + 1
 
   override def apply(trans: Traversable[String]): HeatedChordState = {
     trans foreach (t => heat.heatUp(t, 1))
@@ -135,7 +153,9 @@ class HeatedChordState(
     new HeatedChordState(elements, trans, dissonance, chordCosts, heat)
   }
 
-  override def toString: String = elements.toString
+  override def toString: String = myNotes.toString
+
+//  println(this.transitionProbs)
 }
 
 object HeatedChordState {
@@ -171,7 +191,7 @@ object HeatedChordState {
 
     for (n1 <- notes)
       for (n2 <- notes) {
-        val dis = SuperParticularDissonance(scale(n1))(scale(n2))
+        val dis = SuperParticularDissonance2(scale(n1))(scale(n2))
         counts.incrementCount(n1, n2, dis)
       }
 
