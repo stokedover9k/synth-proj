@@ -56,10 +56,12 @@ abstract class CombinationState[T] extends HasTransitionCosts[Traversable[T]] {
 
   def elementCost(t: T): Double
 
+  def combinationCost: Traversable[T] => Double
+
   def transitionCosts: Counter[Traversable[T]] = {
     val counter = new Counter[Traversable[T]]()
     transitions foreach {
-      t => counter.incrementCount(t, (t map elementCost).sum)
+      t => counter.incrementCount(t, (t map elementCost).sum * combinationCost(t))
     }
     counter
   }
@@ -69,7 +71,11 @@ abstract class FullCombinationState[T] extends CombinationState[T] {
 
   def elements: Seq[T]
 
-  def transitions: TraversableOnce[Traversable[T]] = {
+  def transitions: TraversableOnce[Traversable[T]] = FullCombinationState.allCombinations(elements)
+}
+
+object FullCombinationState {
+  def allCombinations[T](elements: Seq[T]): TraversableOnce[Traversable[T]] = {
     def loop(n: Int): Stream[Seq[T]] = {
       if (n <= 0) Stream()
       else if (n == 1) elements.combinations(n).toStream
@@ -83,13 +89,18 @@ class ChordState(
                   override val elements: Seq[String]
                   , val myNotes: Traversable[String]
                   , val dissonance: (String, String) => Double
+                  , val chordCosts: Traversable[String] => Double
                   )
   extends FullCombinationState[String] {
 
   def elementCost(t: String): Double =
     (myNotes map (n => dissonance(t, n))).sum
 
-  def apply(trans: Traversable[String]): ChordState = new ChordState(elements, trans, dissonance)
+  def apply(trans: Traversable[String]): ChordState = new ChordState(elements, trans, dissonance, chordCosts)
+
+  def combinationCost: (Traversable[String]) => Double = {
+    chordCosts
+  }
 }
 
 class Heat[T] {
@@ -110,9 +121,10 @@ class HeatedChordState(
                         override val elements: Seq[String]
                         , override val myNotes: Traversable[String]
                         , override val dissonance: (String, String) => Double
+                        , override val chordCosts: Traversable[String] => Double
                         , val heat: Heat[String]
                         )
-  extends ChordState(elements, myNotes, dissonance) {
+  extends ChordState(elements, myNotes, dissonance, chordCosts) {
 
   override def elementCost(t: String): Double =
     (myNotes map (n => dissonance(t, n) * heat(n))).sum + 1
@@ -120,7 +132,7 @@ class HeatedChordState(
   override def apply(trans: Traversable[String]): HeatedChordState = {
     trans foreach (t => heat.heatUp(t, 1))
     heat.cool(heat.totalHeat)
-    new HeatedChordState(elements, trans, dissonance, heat)
+    new HeatedChordState(elements, trans, dissonance, chordCosts, heat)
   }
 
   override def toString: String = elements.toString
@@ -128,10 +140,25 @@ class HeatedChordState(
 
 object HeatedChordState {
 
+  def getChordCosts(notes: Seq[String], dissonance: (String, String) => Double): Counter[Traversable[String]] = {
+    val counter = new Counter[Traversable[String]]()
+    for (chord <- FullCombinationState.allCombinations(notes)) {
+      var sum: Double = 0
+      for (n1 <- chord)
+        for (n2 <- chord)
+          sum += dissonance(n1, n2)
+      counter.incrementCount(chord, sum)
+    }
+    counter
+  }
+
   def apply(scale: TypedScale, dissonance: (String, String) => Double): HeatedChordState = {
     val heat = new Heat[String]
     uniqueNotes(scale) foreach (n => heat.heatUp(n))
-    new HeatedChordState(uniqueNotes(scale), Seq[String](), dissonance, heat)
+
+    val chordCosts = getChordCosts(uniqueNotes(scale), dissonance)
+
+    new HeatedChordState(uniqueNotes(scale), Seq[String](), dissonance, chordCosts.getCount, heat)
   }
 
   def uniqueNotes(scale: TypedScale) =
