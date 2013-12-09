@@ -16,16 +16,11 @@ import util.expr.Fraction
 object SuperParticularDissonance2 extends Dissonance {
   def apply(i1: Interval)(i2: Interval): Double =
     i1.hzFactor.div(i2.hzFactor) match {
-      case frac: Fraction =>
-//        if (frac.toFloat == 1)
-//          1
-//        else
-        {
-          val n = frac.num.toFloat
-          val d = frac.denom.toFloat
-          //          Math.pow(1 + Math.abs(frac.num.toFloat - frac.denom.toFloat) / (frac.num.toFloat + frac.denom.toFloat), 2)
-          Math.log(Math.pow((n + d) / (1 + Math.abs(n - d)), 1))
-        }
+      case frac: Fraction => {
+        val n = frac.num.toFloat
+        val d = frac.denom.toFloat
+        Math.log(Math.pow((n + d) / (1 + Math.abs(n - d)), 1))
+      }
       case f =>
         throw sys.error("expecting a fractional interval ratio but found '%s'".format(f.toString))
     }
@@ -144,7 +139,7 @@ class HeatedChordState(
   extends ChordState(elements, myNotes, dissonance, chordCosts) {
 
   override def elementCost(t: String): Double =
-//    (myNotes map (n => dissonance(t, n) * heat(n))).sum + 1
+  //    (myNotes map (n => dissonance(t, n) * heat(n))).sum + 1
     (elements map (n => dissonance(t, n) * heat(n))).sum + 1
 
   override def apply(trans: Traversable[String]): HeatedChordState = {
@@ -154,8 +149,6 @@ class HeatedChordState(
   }
 
   override def toString: String = myNotes.toString
-
-//  println(this.transitionProbs)
 }
 
 object HeatedChordState {
@@ -181,12 +174,10 @@ object HeatedChordState {
     new HeatedChordState(uniqueNotes(scale), Seq[String](), dissonance, chordCosts.getCount, heat)
   }
 
-  def uniqueNotes(scale: TypedScale) =
-    scale.allNames.groupBy(n => n).map(_._1).toList
+  def uniqueNotes(scale: TypedScale) = scale.allNames.groupBy(n => n).map(_._1).toList
 
   def dissonanceFunction(scale: TypedScale): (String, String) => Double = {
     val notes = uniqueNotes(scale)
-
     val counts = new CounterMap[String, String]()
 
     for (n1 <- notes)
@@ -204,7 +195,13 @@ object HeatedChordState {
     val dissonance = dissonanceFunction(scale)
     val state = apply(scale, dissonance)
 
-    MarkovModelTester.runRounds(state, 5)
+    //    MarkovModelTester.runRounds(state, 5)
+    val states = MarkovModelTester.chordStateStream(state) take 20
+
+    val song = states.toList map (_.myNotes.toSeq)
+    song foreach println
+
+    DemoChordPlayer.demoPlayChords(scale, song)
   }
 }
 
@@ -244,6 +241,25 @@ object MarkovModelTester extends App {
     def apply(trans: String) = City(trans)
   }
 
+  def stateStream[T](begin: State[T]): Stream[State[T]] = {
+    def loop(s: State[T]): Stream[State[T]] = {
+      val delta = MarkovModel2.getTransition(s)
+      val prob = s.prob(delta)
+      val next = s(delta)
+      next #:: loop(next)
+    }
+    begin #:: loop(begin)
+  }
+
+  def chordStateStream[T](begin: ChordState): Stream[ChordState] = {
+    def loop(s: ChordState): Stream[ChordState] = {
+      val delta = MarkovModel2.getTransition(s)
+      val prob = s.prob(delta)
+      val next = s(delta)
+      next #:: loop(next)
+    }
+    begin #:: loop(begin)
+  }
 
   def runRounds[T](begin: State[T], num: Int): Unit = {
     if (num > 0) {
