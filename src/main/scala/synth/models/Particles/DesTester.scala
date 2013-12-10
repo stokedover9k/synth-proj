@@ -20,10 +20,8 @@ object DesTester extends App {
 
     def msg = m
 
-    def action: (DES[Ev]) => DES[Ev] = sim => {
-      println("%s %d %d".format(msg, time, prio))
-      sim
-    }
+    def action: (DES[Ev]) => DES[Ev] =
+      sim => sim
   }
 
   case class Birth(override val time: Int) extends Ev(time, 1, "birth")
@@ -31,6 +29,11 @@ object DesTester extends App {
   case class Death(override val time: Int) extends Ev(time, 2, "death")
 
   implicit val EOrder: Ordering[Ev] = Ordering[(Int, Int, String)].on[Ev](e => (e.time, e.prio, e.msg))
+
+  implicit val printer = (ev: Ev, des: DES[Ev]) => {
+    println(ev)
+    des
+  }
 
   val sim = (1 to 10).foldLeft(new DES[Ev](SortedSet[Ev]())) {
     case (s: DES[Ev], i: Int) => {
