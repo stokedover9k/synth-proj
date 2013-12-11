@@ -19,9 +19,6 @@ object DesTester extends App {
     def prio = p
 
     def msg = m
-
-    def action: (DES[Ev]) => DES[Ev] =
-      sim => sim
   }
 
   case class Birth(override val time: Int) extends Ev(time, 1, "birth")

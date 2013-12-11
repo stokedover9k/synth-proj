@@ -15,25 +15,23 @@ object DES {
 
   trait Event[C <: Event[C]] {
     self: C =>
-    def action: Action[C]
   }
 
+  implicit def doNothingProcessor[E <: Event[E]] = (e: E, des: DES[E]) => des
 }
 
 class DES[E <: DES.Event[E]](private val queue: SortedSet[E]) {
 
   type EVENT_PROCESSOR = (E, DES[E]) => DES[E]
 
-  implicit private val __do_not_process__ : EVENT_PROCESSOR = (e: E, des: DES[E]) => des
-
   def peek: E = queue.firstKey
 
-  def next(implicit process: EVENT_PROCESSOR = __do_not_process__): DES[E] =
-    process(peek, peek.action(new DES(queue - peek)))
+  def next(implicit process: EVENT_PROCESSOR): DES[E] =
+    process(peek, new DES(queue - peek))
 
   def addEvent(e: E): DES[E] = new DES(queue + e)
 
-  def play(implicit process: EVENT_PROCESSOR = __do_not_process__): DES[E] = {
+  def play(implicit process: EVENT_PROCESSOR): DES[E] = {
     var s = this
     while (!s.queue.isEmpty)
       s = s.next(process)
