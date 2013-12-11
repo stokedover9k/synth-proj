@@ -47,25 +47,16 @@ object DesTester extends App {
 
 object DesNoteEventTester extends App {
 
-  object NoteLifeProcessor extends EventProcessor[NoteEvent] {
-    def handler(e: NoteEvent, des: DES[NoteEvent]): DES[NoteEvent] = e match {
-      case Birth(note, time, life) => des addEvent Death(note, time + life, life)
-      case Death(note, time, life) => des addEvent Decay(note, time, life)
-      case Decay(note, time, life) => des
-      case _ => throw sys.error("unknown event type " + e)
-    }
-
-    def process: (NoteEvent, DES[NoteEvent]) => DES[NoteEvent] = handler
-  }
+  import NoteEvent._
 
   object NoteLifePrinter extends EventProcessor[NoteEvent] {
-    def toString(e: NoteEvent): String =
-      "%s [born %d died %d] (t %d p %d)".format(e.note, e.bornAt, e.diedAt, e.time, e.priority)
+    def toString(t: String, e: NoteEvent): String =
+      "%5d: %s %-2s %5d %5d %5d".format(e.time, t, e.note, e.bornAt, e.diedAt, e.lifespan)
 
     def handler(e: NoteEvent): Unit = e match {
-      case Birth(note, time, life) => println("+ " + toString(e))
-      case Death(note, time, life) => println("- " + toString(e))
-      case Decay(note, born, life) => println("% " + toString(e))
+      case Birth(note, time, life) => println(toString("+", e))
+      case Death(note, time, life) => println(toString("-", e))
+      case Decay(note, born, life) => println(toString("%", e))
       case _ => throw sys.error("unknown event type " + e)
     }
 
