@@ -17,7 +17,36 @@ object DES {
     self: C =>
   }
 
-  implicit def doNothingProcessor[E <: Event[E]] = (e: E, des: DES[E]) => des
+  private var __NEVER_CALLED_PROCESSOR__ = true
+
+  def doNothingProcessor[E <: Event[E]] = (e: E, des: DES[E]) => {
+    if (__NEVER_CALLED_PROCESSOR__) {
+      System.err.println("[warning] Using default doNothingProcessor to process DES events.")
+      __NEVER_CALLED_PROCESSOR__ = false
+    }
+    des
+  }
+
+  trait EventProcessor[E <: Event[E]] {
+    def process: (E, DES[E]) => DES[E]
+  }
+
+  object EventProcessor {
+
+    class ChainableEventProcessor[E <: DES.Event[E]](val first: EventProcessor[E]) {
+      def andThen(next: EventProcessor[E]): EventProcessor[E] = new EventProcessor[E] {
+        def process: (E, DES[E]) => DES[E] = (e, des) => {
+          val firstRes = first.process(e, des)
+          next.process(e, firstRes)
+        }
+      }
+    }
+
+    implicit def chainEventProcessors[E <: DES.Event[E]](p: EventProcessor[E]) = new ChainableEventProcessor[E](p)
+  }
+
+  implicit def ProcessorToFunction[E <: Event[E]](implicit proc: EventProcessor[E]): (E, DES[E]) => DES[E] = proc.process
+
 }
 
 class DES[E <: DES.Event[E]](private val queue: SortedSet[E]) {
