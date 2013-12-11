@@ -49,14 +49,16 @@ object DesNoteEventTester extends App {
 
   import NoteEvent._
 
+
+
+
   object NoteLifePrinter extends EventProcessor[NoteEvent] {
-    def toString(t: String, e: NoteEvent): String =
-      "%5d: %s %-2s %5d %5d %5d".format(e.time, t, e.note, e.bornAt, e.diedAt, e.lifespan)
+    private def stringPattern = "%5d: %s %-2s %5d %5d %5d"
 
     def handler(e: NoteEvent): Unit = e match {
-      case Birth(note, time, life) => println(toString("+", e))
-      case Death(note, time, life) => println(toString("-", e))
-      case Decay(note, born, life) => println(toString("%", e))
+      case Birth(note, time, life) => println(stringPattern.format(time, "+", note.get, time, life, time + life))
+      case Death(note, time, life) => println(stringPattern.format(time, "-", note.get, time - life, life, time))
+      case Decay(time) => println("%5d: %s".format(time, "~~~"))
       case _ => throw sys.error("unknown event type " + e)
     }
 
@@ -66,10 +68,20 @@ object DesNoteEventTester extends App {
     }
   }
 
-  implicit val proc = NoteLifePrinter andThen NoteLifeProcessor
+  implicit val proc = NoteLifePrinter andThen new NoteSystemProcessor {
+
+    def processDecay: (Decay, DES[NoteEvent]) => DES[NoteEvent] =
+      (e, des) => {
+        noteSystem.stopping foreach {
+          n => println(n)
+        }
+        des
+      }
+  }
 
 
-  implicit val EOrder: Ordering[NoteEvent] = Ordering[(Int, Int)].on[NoteEvent](e => (e.time, e.priority))
+  implicit val EOrder: Ordering[NoteEvent] =
+    Ordering[(Int, Int, Option[NoteEvent.Note])].on[NoteEvent](e => (e.time, e.priority, e.note))
 
   val notes = "A B C D E F G".split("\\s").toIndexedSeq
 
@@ -78,7 +90,7 @@ object DesNoteEventTester extends App {
       val note = notes((Math.random() * notes.size).toInt)
       val bornAt = (Math.random() * 10).toInt
       val lifespan = (Math.random() * 10).toInt
-      d addEvent Birth(note, bornAt, lifespan)
+      d addEvent Birth(Option(note), bornAt, lifespan)
     }
   }
 
