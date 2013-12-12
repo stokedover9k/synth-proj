@@ -42,6 +42,16 @@ object DemoChordPlayer {
     demoPlay(chords)
   }
 
+  def demoPlayChordsSeconds(scale: TypedScale, song: List[(Seq[String], Int)]): Unit = {
+    def tones(notes: Seq[String]) = notes map {
+      note => ComplexTone(scale(note).hz, toneComponents)
+    }
+    def chords = song map {
+      chord => ComplexChord(tones(chord._1)) -> (chord._2 * .5f * SAMPLE_RATE).toInt
+    }
+    demoPlay(chords)
+  }
+
   def demoPlay(chordFrames: List[(ComplexChord, Int)]): Unit = {
     def songStream =
       SoundStream.getSampleStream(chordFrames).map {

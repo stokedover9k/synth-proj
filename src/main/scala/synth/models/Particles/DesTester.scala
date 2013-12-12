@@ -2,6 +2,8 @@ package synth.models.Particles
 
 import scala.collection.immutable.SortedSet
 import synth.models.Particles.DES.EventProcessor
+import synth.models.DemoChordPlayer
+import synth.scales.ScaleBuilderRameau
 
 /**
  * Created with IntelliJ IDEA.
@@ -50,8 +52,6 @@ object DesNoteEventTester extends App {
   import NoteEvent._
 
 
-
-
   object NoteLifePrinter extends EventProcessor[NoteEvent] {
     private def stringPattern = "%5d: %s %-2s %5d %5d %5d"
 
@@ -68,16 +68,20 @@ object DesNoteEventTester extends App {
     }
   }
 
-  implicit val proc = NoteLifePrinter andThen new NoteSystemProcessor {
+  //  implicit val proc = NoteLifePrinter andThen new NoteSystemProcessor {
+  //
+  //    def processDecay: (Decay, DES[NoteEvent]) => DES[NoteEvent] =
+  //      (e, des) => {
+  //        noteSystem.stopping foreach {
+  //          n => println(n)
+  //        }
+  //        des
+  //      }
+  //  }
 
-    def processDecay: (Decay, DES[NoteEvent]) => DES[NoteEvent] =
-      (e, des) => {
-        noteSystem.stopping foreach {
-          n => println(n)
-        }
-        des
-      }
-  }
+  val systemProcessor = new HeatedParticleSystemProc
+
+  implicit val proc = NoteLifePrinter andThen systemProcessor
 
 
   implicit val EOrder: Ordering[NoteEvent] =
@@ -95,4 +99,11 @@ object DesNoteEventTester extends App {
   }
 
   des.play
+
+  val song = systemProcessor.songBuffer.toList.map {
+    case (a, b) => (a.toSeq, b)
+  }
+  println(song)
+  val scale = ScaleBuilderRameau(528).build
+  DemoChordPlayer.demoPlayChordsSeconds(scale, song)
 }

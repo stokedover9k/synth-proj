@@ -153,9 +153,11 @@ class HeatedChordState(
 
 object HeatedChordState {
 
-  def getChordCosts(notes: Seq[String], dissonance: (String, String) => Double): Counter[Traversable[String]] = {
+  implicit val allowAllChords: Traversable[String] => Boolean = chord => true
+
+  def getChordCosts(notes: Seq[String], dissonance: (String, String) => Double)(implicit chordFilter: Traversable[String] => Boolean): Counter[Traversable[String]] = {
     val counter = new Counter[Traversable[String]]()
-    for (chord <- FullCombinationState.allCombinations(notes)) {
+    for (chord <- FullCombinationState.allCombinations(notes).filter(chordFilter)) {
       var sum: Double = 0
       for (n1 <- chord)
         for (n2 <- chord)
@@ -165,11 +167,11 @@ object HeatedChordState {
     counter
   }
 
-  def apply(scale: TypedScale, dissonance: (String, String) => Double): HeatedChordState = {
+  def apply(scale: TypedScale, dissonance: (String, String) => Double)(implicit chordFilter: Traversable[String] => Boolean): HeatedChordState = {
     val heat = new Heat[String]
     uniqueNotes(scale) foreach (n => heat.heatUp(n))
 
-    val chordCosts = getChordCosts(uniqueNotes(scale), dissonance)
+    val chordCosts = getChordCosts(uniqueNotes(scale), dissonance)(chordFilter)
 
     new HeatedChordState(uniqueNotes(scale), Seq[String](), dissonance, chordCosts.getCount, heat)
   }

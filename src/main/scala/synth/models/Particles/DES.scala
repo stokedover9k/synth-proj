@@ -55,6 +55,8 @@ class DES[E <: DES.Event[E]](private val queue: SortedSet[E]) {
 
   def peek: E = queue.firstKey
 
+  def size: Int = queue.size
+
   def next(implicit process: EVENT_PROCESSOR): DES[E] =
     process(peek, new DES(queue - peek))
 
