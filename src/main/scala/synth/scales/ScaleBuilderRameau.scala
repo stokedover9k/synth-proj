@@ -76,7 +76,7 @@ object ScaleBuilderRameau {
     "D" -> "C#",
     "A" -> "G#",
     "E" -> "D#",
-    "B" ->	"A#"
+    "B" -> "A#"
   )
 
   lazy val flats = Map(
@@ -87,4 +87,45 @@ object ScaleBuilderRameau {
     "Ab" -> "Db",
     "Db" -> "Gb"
   )
+
+  def main(args: Array[String]): Unit = {
+
+    def printScale(scale: TypedScale, builtFrom: Expr): Unit = {
+      val pattern = "%-2s %8s | "
+      (scale.allNames zip scale.intervals) foreach {
+        case (note: String, interval: Series.Interval) =>
+          print(pattern.format(note, interval.hzFactor.toString))
+      }
+      println()
+      (scale.allNames zip scale.intervals) foreach {
+        case (note: String, interval: Series.Interval) =>
+          print(pattern.format("", interval.hzFactor.mult(builtFrom).toString))
+      }
+      println("\n")
+    }
+
+    val builder = ScaleBuilderRameau(528)
+    val baseScale = builder.build
+
+    printScale(baseScale, baseScale(0).hzFactor)
+
+    def loopFifths(builder: ScaleBuilderRameau, builtFrom: Expr, num: Int): Unit = if (num > 0) {
+      val newBuilder = builder.fifthUpBuilder
+      val scale = newBuilder.build
+      printScale(scale, builtFrom)
+      loopFifths(newBuilder, builtFrom.mult(scale(IntervalType.Fifth).hzFactor), num - 1)
+    }
+
+    def loopFourths(builder: ScaleBuilderRameau, builtFrom: Expr, num: Int): Unit = if (num > 0) {
+      val newBuilder = builder.fourthUpBuilder
+      val scale = newBuilder.build
+      printScale(scale, builtFrom)
+      loopFifths(newBuilder, builtFrom.mult(scale(IntervalType.Fourth).hzFactor), num - 1)
+    }
+
+    loopFifths(builder, baseScale(0).hzFactor, 5)
+
+    loopFourths(builder, baseScale(0).hzFactor, 5)
+
+  }
 }
