@@ -2,14 +2,13 @@ package gui
 
 import scala.swing._
 import java.awt.Color
-import synth.scales.{ScaleBuilderRameau, TypedScale}
+import synth.scales._
 import synth.models.Particles.{DES, HeatedParticleSystemProc, NoteEvent}
 import synth.models.Particles.DesNoteEventTester.NoteLifePrinter
-import synth.models.Particles.NoteEvent.Birth
 import scala.collection.immutable.SortedSet
-import javax.swing.BoxLayout
-import scala.swing.event.ButtonClicked
 import synth.models.DemoChordPlayer
+import scala.swing.event.ButtonClicked
+import synth.models.Particles.NoteEvent.Birth
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,6 +17,55 @@ import synth.models.DemoChordPlayer
  * Time: 2:06 PM
  * To change this template use File | Settings | File Templates.
  */
+
+class ScalePicker(fundamental: Float) extends BoxPanel(Orientation.Vertical) {
+  private val scales = Map[String, () => TypedScale](
+    "Full (Pythagorean)" -> {
+      () => ScaleBuilderPythagFull(fundamental).build
+    },
+    "Heptatonic (Pythagorean)" -> {
+      () => ScaleBuilderPythagHepto(fundamental).build
+    },
+    "Full (Even Temperment)" -> {
+      () => ScaleBuilderEvenTempFull(fundamental).build
+    },
+    "Full (Dodecophonic)" -> {
+      () => ScaleBuilderDodecophonicFull(fundamental).build
+    },
+    "Long (Harmonic)" -> {
+      () => ScaleBuilderHarmonicLong(fundamental, 32).build
+    },
+    "Chromatic (Ptolemy)" -> {
+      () => ScaleBuilderPtolemyChromatic(fundamental).build
+    },
+    "Zarlino" -> {
+      () => ScaleBuilderZarlino(fundamental).build
+    },
+    "Mean Tone" -> {
+      () => ScaleBuilderMeanTone(fundamental).build
+    },
+    "Rameau" -> {
+      () => ScaleBuilderRameau(fundamental).build
+    }
+  )
+
+  val buttons = scales.keys.toSeq.sortBy(_.toString) map (new RadioButton(_))
+
+  private val buttonGroup = new ButtonGroup(buttons.toSeq: _*)
+
+  buttons foreach (listenTo(_))
+
+  contents ++= buttons
+
+  var scale = getScale(buttons.head.text)
+  buttons.head.selected = true
+
+  private def getScale(name: String): TypedScale = scales.get(name).get()
+
+  reactions += {
+    case ButtonClicked(button) => scale = getScale(button.text)
+  }
+}
 
 object DemoParticles extends SimpleSwingApplication {
 
@@ -51,26 +99,25 @@ object DemoParticles extends SimpleSwingApplication {
     }
   }
 
-  var scale = ScaleBuilderRameau(528).build
-
   //-----------------------------------
 
   val systemProcessor = new HeatedParticleSystemProc
 
   implicit val proc = NoteLifePrinter andThen systemProcessor
 
-
   implicit val EOrder: Ordering[NoteEvent] =
     Ordering[(Int, Int, Option[NoteEvent.Note])].on[NoteEvent](e => (e.time, e.priority, e.note))
 
-  val notes = "A B C D E F G".split("\\s").toIndexedSeq
+  val des = {
+    val notes = ScaleBuilderRameau(528f).build.allNames
 
-  val des = (1 to 10).foldLeft(new DES[NoteEvent](SortedSet())) {
-    case (d, i) => {
-      val note = notes((Math.random() * notes.size).toInt)
-      val bornAt = (Math.random() * 10).toInt
-      val lifespan = (Math.random() * 10).toInt
-      d addEvent Birth(Option(note), bornAt, lifespan)
+    (1 to 10).foldLeft(new DES[NoteEvent](SortedSet())) {
+      case (d, i) => {
+        val note = notes((Math.random() * notes.size).toInt)
+        val bornAt = (Math.random() * 10).toInt
+        val lifespan = (Math.random() * 10).toInt
+        d addEvent Birth(Option(note), bornAt, lifespan)
+      }
     }
   }
 
@@ -90,19 +137,26 @@ object DemoParticles extends SimpleSwingApplication {
     case ButtonClicked(button) => {
       if (button == playButton) {
         button.enabled = false
-        DemoChordPlayer.demoPlayChordsSeconds(scale, song)
+        DemoChordPlayer.demoPlayChordsSeconds(scalePicker.scale, song)
         button.enabled = true
       }
     }
     case _ =>
   }
 
+  val scalePicker = new ScalePicker(528f)
+
+  val songDisplay = new ScrollPane {
+    contents = new SongDisplay(song)
+    preferredSize = new Dimension(800, 300)
+  }
+
   def top: Frame = new MainFrame {
     title = "Particles Demo"
     contents = new BorderPanel {
-      add(playButton, North)
-      add(new ScaleDisplay("Rameau", scale), Center)
-      add(new SongDisplay(song), South)
+      add(playButton, West)
+      add(scalePicker, Center)
+      add(songDisplay, South)
     }
   }
 }
