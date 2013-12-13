@@ -116,6 +116,10 @@ Here are some of the demos:
 
 	> A GUI app that plays "Mary Had a Little Lamb"
 
++	gui.DemoModulatingParticles
+
+	> A demo which produces a song using stochastic models and plays it
+
 
 Run them with no arguments to see the usage message.
 
