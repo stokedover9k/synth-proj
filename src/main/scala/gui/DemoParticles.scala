@@ -101,7 +101,7 @@ object DemoParticles extends SimpleSwingApplication {
 
   //-----------------------------------
 
-  val systemProcessor = new HeatedParticleSystemProc
+  val systemProcessor = new HeatedParticleSystemProc(ScaleBuilderRameau(528).build)
 
   implicit val proc = NoteLifePrinter andThen systemProcessor
 

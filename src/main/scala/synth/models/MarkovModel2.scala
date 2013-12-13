@@ -4,6 +4,7 @@ import util.{CounterMap, Counters, Counter}
 import synth.scales.{ScaleBuilderRameau, TypedScale}
 import synth.Series.Interval
 import util.expr.Fraction
+import synth.Series
 
 /**
  * Created with IntelliJ IDEA.
@@ -186,6 +187,24 @@ object HeatedChordState {
       for (n2 <- notes) {
         val dis = SuperParticularDissonance2(scale(n1))(scale(n2))
         counts.incrementCount(n1, n2, dis)
+      }
+
+    (a: String, b: String) => counts.getCount(a, b)
+  }
+
+  def multiScaleDissonanceFunction(scales: Traversable[TypedScale]): (String, String) => Double = {
+    var notes = Map[String, Series.Interval]()
+    for( sc <- scales )
+      for( note <- sc.allNames )
+        if( !notes.contains(note))
+          notes += (note -> sc(note))
+
+    val counts = new CounterMap[String, String]()
+
+    for (n1 <- notes)
+      for (n2 <- notes) {
+        val dis = SuperParticularDissonance2(n1._2)(n2._2)
+        counts.incrementCount(n1._1, n2._1, dis)
       }
 
     (a: String, b: String) => counts.getCount(a, b)

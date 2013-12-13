@@ -4,10 +4,11 @@ import scala.collection.mutable
 import synth.models.Particles.DES.EventProcessor
 import synth.models.Particles.NoteEvent.{Birth, Death, Decay}
 import synth.models.{MarkovModelTester, SuperParticularDissonance2, HeatedChordState, Heat}
-import synth.scales.{ScaleBuilderRameau, ScaleBuilderZarlino}
-import util.{Counters, Counter}
+import synth.scales.{IntervalType, TypedScale, ScaleBuilderRameau, ScaleBuilderZarlino}
+import util.{CounterMap, Counters, Counter}
 import scala.collection.mutable.ListBuffer
-
+import util.expr.Expr
+import scala.collection.JavaConversions._
 
 /**
  * Created with IntelliJ IDEA.
@@ -110,17 +111,19 @@ abstract class HeatedNoteSystemProcessor extends NoteSystemProcessor {
   }
 }
 
-class HeatedParticleSystemProc extends HeatedNoteSystemProcessor {
+class HeatedParticleSystemProc(sc: TypedScale) extends HeatedNoteSystemProcessor {
 
   import NoteEvent._
+
+  var scale = sc
 
   override val noteHeat: Heat[Note] = new Heat[Note]
 
   val noteSystem: NoteSystem = new NoteSystem
 
+  val dissonance = HeatedChordState.dissonanceFunction(scale)
+
   def emit(playing: Traversable[Note], stopping: Traversable[Note], heat: Heat[Note], time: Int): Traversable[Birth] = {
-    val scale = ScaleBuilderRameau(528).build
-    val dissonance = HeatedChordState.dissonanceFunction(scale)
     val state = HeatedChordState(scale, dissonance)(HeatedChordState.allowAllChords)
 
     //-------- potency ------------------------------
@@ -152,7 +155,15 @@ class HeatedParticleSystemProc extends HeatedNoteSystemProcessor {
 
     val nextChord = emitter.emit
 
-    nextChord map (note => Birth(Option(note), time, (Math.random() * 5).toInt))
+    val emission = nextChord map (note => Birth(Option(note), time, (Math.random() * 5).toInt))
+
+    emission foreach {
+      birth => heat.heatUp(birth.note.get, birth.lifespan / 5f)
+    }
+
+    heat.cool(heat.totalHeat)
+
+    emission
   }
 
   //////////// here's something abstract /////////// !!!!!!!!!!!!
@@ -196,6 +207,73 @@ class HeatedParticleSystemProc extends HeatedNoteSystemProcessor {
     def emit: Set[N] = Counters.sample(chordDistribution) -- P
   }
 
+}
+
+class HeatedAllScaleParticleProc extends HeatedParticleSystemProc(ScaleBuilderRameau(528).build) {
+
+  import NoteEvent._
+
+  val allScales = {
+
+    val builder = ScaleBuilderRameau(528)
+
+    val baseScale = builder.build
+
+    var scales = Map[String, TypedScale]()
+    def addScale(scale: TypedScale) = {
+      scales += (scale.allNames(0) -> scale)
+    }
+
+    addScale(baseScale)
+
+    def loopFifths(builder: ScaleBuilderRameau, builtFrom: Expr, num: Int): Unit = if (num > 0) {
+      val newBuilder = builder.fifthUpBuilder
+      val scale = newBuilder.build
+      addScale(scale)
+      loopFifths(newBuilder, builtFrom.mult(scale(IntervalType.Fifth).hzFactor), num - 1)
+    }
+
+    def loopFourths(builder: ScaleBuilderRameau, builtFrom: Expr, num: Int): Unit = if (num > 0) {
+      val newBuilder = builder.fourthUpBuilder
+      val scale = newBuilder.build
+      addScale(scale)
+      loopFifths(newBuilder, builtFrom.mult(scale(IntervalType.Fourth).hzFactor), num - 1)
+    }
+
+    loopFifths(builder, baseScale(0).hzFactor, 5)
+
+    loopFourths(builder, baseScale(0).hzFactor, 7)
+
+    println(scales)
+
+    scales
+  }
+
+  override val dissonance = HeatedChordState.multiScaleDissonanceFunction(allScales.values)
+
+  override def emit(playing: Traversable[Note], stopping: Traversable[Note], heat: Heat[Note], time: Int): Traversable[Birth] = {
+
+    val scaleDissonance: Counter[String] = new Counter[String]()
+
+    allScales foreach {
+      case (root, sc) => {
+        for( i <- sc.allNames )
+          for( j <- heat.getCounter.keySet() ) {
+            scaleDissonance.incrementCount(root, dissonance(i,j) * (heat(i) + heat(j) + 1))
+          }
+      }
+    }
+
+    scaleDissonance.normalize()
+
+    if( Math.random() < .1 ) {
+      val newRoot = Counters.sample(scaleDissonance)
+      scale = allScales(newRoot)
+      println("new root is " + newRoot)
+    }
+
+    super.emit(playing, stopping, heat, time)
+  }
 }
 
 
